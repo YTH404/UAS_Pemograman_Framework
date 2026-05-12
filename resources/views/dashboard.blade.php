@@ -84,7 +84,6 @@
                 <a href="{{ url('/') }}" class="group inline-flex items-center gap-3">
                     <span class="grid h-11 w-11 place-items-center rounded-2xl bg-slate-900 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition-transform duration-200 group-hover:-translate-y-0.5">LMS</span>
                     <span>
-                        {{-- <span class="block text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-sky-700">Student area</span> --}}
                         <span class="block text-lg font-semibold text-slate-900">Dashboard</span>
                     </span>
                 </a>
@@ -103,10 +102,8 @@
                     <article class="overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/70 lg:p-10">
                             <div class="flex items-center justify-between gap-4">
                                 <div>
-                                    {{-- <p class="text-sm font-semibold uppercase tracking-[0.22em] text-sky-700">Your Course</p> --}}
                                     <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Your learning workspace for courses, progress, and deadlines.</h2>
                                 </div>
-                                {{-- <div class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white">3 courses</div> --}}
                             </div>
 
                             <div class="mt-8 grid gap-4 lg:grid-cols-2">
@@ -128,9 +125,7 @@
                             <div class="flex items-center justify-between gap-4">
                                 <div>
                                     <p class="text-sm font-semibold uppercase tracking-[0.22em] text-sky-300">Upcoming Assignments</p>
-                                    <h2 class="mt-2 text-3xl font-semibold tracking-tight">Maximum of 3 tasks so the list stays focused</h2>
                                 </div>
-                                <div class="rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-slate-100">{{ count($upcomingAssignments) }} tasks</div>
                             </div>
 
                             <div class="mt-8 space-y-4">
@@ -157,16 +152,6 @@
                 </div>
 
                 <section class="space-y-6">
-                    <div class="flex items-end justify-between gap-4">
-                        {{-- <div>
-                            <p class="text-sm font-semibold uppercase tracking-[0.22em] text-sky-700">Enrolled courses</p>
-                            <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Course cards with color, shape, title, teacher, and progress</h2>
-                        </div>
-                        <a href="{{ route('login') }}" class="hidden rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:text-slate-950 sm:inline-flex">
-                            Back to portal
-                        </a> --}}
-                    </div>
-
                     <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
                         @foreach ($courseSummary as $course)
                             @php
