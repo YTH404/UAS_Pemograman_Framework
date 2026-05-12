@@ -7,3 +7,4 @@ Route::get('/', function () {
 });
 
 Route::view('/login', 'auth.login')->name('login');
+Route::view('/dashboard', 'dashboard')->name('dashboard');
