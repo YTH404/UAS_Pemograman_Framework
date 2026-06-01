@@ -95,6 +95,13 @@
                     </div>
                     <div class="grid h-11 w-11 place-items-center rounded-full bg-sky-100 text-sm font-semibold text-sky-700 ring-1 ring-sky-200">AP</div>
                 </div>
+
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit">
+                        Logout
+                    </button>
+                </form>
             </header>
 
             <main class="mx-auto flex w-full max-w-7xl flex-col gap-8 px-6 pb-16 pt-2 lg:px-8 lg:pb-24">

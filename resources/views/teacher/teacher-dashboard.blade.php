@@ -76,6 +76,13 @@
                     </div>
                     <div class="grid h-11 w-11 place-items-center rounded-full bg-sky-100 text-sm font-semibold text-sky-700 ring-1 ring-sky-200">DR</div>
                 </div>
+
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="w-full rounded-2xl bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-700 shadow-sm transition duration-200 hover:bg-rose-100 hover:shadow-md hover:shadow-rose-200/70">
+                        Logout
+                    </button>
+                </form>
             </header>
 
             <main class="mx-auto flex w-full max-w-7xl flex-col gap-8 px-6 pb-16 pt-2 lg:px-8 lg:pb-24">
