@@ -20,6 +20,10 @@ class Classes extends Model
     protected static function booted()
     {
         static::deleting(function (self $class) {
+            if ($class->hasLinkedData()) {
+                return false;
+            }
+
             if ($class->isForceDeleting()) {
                 return;
             }
@@ -37,6 +41,11 @@ class Classes extends Model
     public function studentClasses(): HasMany
     {
         return $this->hasMany(StudentClass::class, 'class_id');
+    }
+
+    public function hasLinkedData(): bool
+    {
+        return $this->studentClasses()->exists();
     }
 
     

@@ -3,3 +3,7 @@
 @if (session('success'))
     <div class="hidden" data-swal-success="{{ session('success') }}"></div>
 @endif
+
+@if (session('error'))
+    <div class="hidden" data-swal-error="{{ session('error') }}"></div>
+@endif

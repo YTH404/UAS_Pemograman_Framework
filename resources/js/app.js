@@ -94,6 +94,14 @@ onReady(() => {
 		});
 	}
 
+	const errorNotice = document.querySelector("[data-swal-error]");
+	if (errorNotice) {
+		toast.fire({
+			icon: "error",
+			title: errorNotice.dataset.swalError,
+		});
+	}
+
 	document.querySelectorAll("[data-swal-logout]").forEach((form) => {
 		if (!bindOnce(form, "swalLogoutBound")) {
 			return;

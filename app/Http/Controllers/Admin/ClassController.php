@@ -10,7 +10,7 @@ class ClassController extends Controller
 {
     public function index()
     {
-        $classes = Classes::all();
+        $classes = Classes::withCount('studentClasses')->get();
         return view('admin.class.index', compact('classes'));
     }
 
@@ -53,6 +53,11 @@ class ClassController extends Controller
     public function destroy(string $class)
     {
         $class = Classes::findOrFail($class);
+
+        if ($class->hasLinkedData()) {
+            return redirect()->route('admin.class.index')->with('error', __('sweetalert.flash.class.delete_blocked'));
+        }
+
         $class->delete();
 
         return redirect()->route('admin.class.index')->with('success', __('sweetalert.flash.class.deleted'));

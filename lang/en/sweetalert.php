@@ -47,6 +47,7 @@ return [
             'created' => 'Class has been created.',
             'updated' => 'Class has been updated.',
             'deleted' => 'Class has been deleted.',
+            'delete_blocked' => 'Class cannot be deleted while students are assigned to it.',
         ],
 
         'teacher' => [

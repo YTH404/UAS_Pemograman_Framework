@@ -37,11 +37,13 @@
                             <td class="px-6 py-4 text-sm">
                                 <div class="flex gap-2">
                                     <a href="{{ route('admin.class.edit', $class['id']) }}" class="rounded-lg px-3 py-2 text-xs font-semibold text-sky-700 transition-colors hover:bg-sky-100">Edit</a>
-                                    <form method="POST" action="{{ route('admin.class.destroy', $class['id']) }}" data-swal-delete data-swal-title="{{ __('sweetalert.delete.class.title') }}" data-swal-text="{{ __('sweetalert.delete.class.text', ['name' => $class['class_name']]) }}" data-swal-confirm="{{ __('sweetalert.delete.class.confirm') }}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="rounded-lg px-3 py-2 text-xs font-semibold text-red-600 transition-colors hover:bg-red-100">Delete</button>
-                                    </form>
+                                    @if ($class->student_classes_count === 0)
+                                        <form method="POST" action="{{ route('admin.class.destroy', $class['id']) }}" data-swal-delete data-swal-title="{{ __('sweetalert.delete.class.title') }}" data-swal-text="{{ __('sweetalert.delete.class.text', ['name' => $class['class_name']]) }}" data-swal-confirm="{{ __('sweetalert.delete.class.confirm') }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="rounded-lg px-3 py-2 text-xs font-semibold text-red-600 transition-colors hover:bg-red-100">Delete</button>
+                                        </form>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
