@@ -26,13 +26,13 @@ class AuthController extends Controller
 
         if (! Auth::attempt(['username' => $loginValue, 'password' => $credentials['password']], $remember)) {
             throw ValidationException::withMessages([
-                'login' => 'The provided credentials do not match our records.',
+                'login' => __('auth.failed'),
             ]);
         }
 
         $request->session()->regenerate();
 
-        return redirect()->route($this->dashboardRoute($request->user()));
+        return redirect()->route($this->dashboardRoute($request->user()))->with('success', __('sweetalert.flash.auth.login'));
     }
 
     public function destroy(Request $request): RedirectResponse
@@ -42,7 +42,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login');
+        return redirect()->route('login')->with('success', __('sweetalert.flash.auth.logout'));
     }
 
     private function dashboardRoute($user): string

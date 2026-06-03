@@ -10,6 +10,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="min-h-screen bg-slate-50 text-slate-900 antialiased">
+        <x-sweet-alert-messages />
         <div class="relative flex min-h-screen items-center justify-center overflow-hidden px-6 py-10">
             <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,_rgba(14,165,233,0.16),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(245,158,11,0.12),_transparent_32%),linear-gradient(to_bottom,_#f8fafc,_#eef2ff_48%,_#f8fafc)]"></div>
 
@@ -23,8 +24,8 @@
 
                         @if ($errors->any())
                             <div class="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-                                <p class="font-semibold">We could not sign you in.</p>
-                                <p class="mt-1">Check your credentials and try again.</p>
+                                <p class="font-semibold">{{ __('auth.login.error_title') }}</p>
+                                <p class="mt-1">{{ __('auth.login.error_text') }}</p>
                             </div>
                         @endif
 

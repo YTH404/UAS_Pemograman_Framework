@@ -32,6 +32,11 @@ return [
     ],
 
     'flash' => [
+        'auth' => [
+            'login' => 'Logged in successfully.',
+            'logout' => 'Logged out successfully.',
+        ],
+
         'class' => [
             'created' => 'Class has been created.',
             'updated' => 'Class has been updated.',
