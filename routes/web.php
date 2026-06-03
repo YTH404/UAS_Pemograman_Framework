@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\ClassController;
+use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
 use App\Http\Controllers\Teacher\DashboardController as TeacherDashboardController;
 use Illuminate\Support\Facades\Route;
@@ -34,10 +35,14 @@ Route::middleware('auth')->group(function () {
         Route::put('/manage-class/{class}', [ClassController::class, 'update'])->name('class.update');
         Route::delete('/manage-class/{class}', [ClassController::class, 'destroy'])->name('class.destroy');
         
-        Route::view('/manage-teacher', 'admin.manage-teacher')->name('manage-teacher');
+        Route::get('/manage-teacher', [TeacherController::class, 'index'])->name('manage-teacher');
+        Route::get('/manage-teacher/create', [TeacherController::class, 'create'])->name('teacher.create');
+        Route::post('/manage-teacher', [TeacherController::class, 'store'])->name('manage-teacher.store');
+        Route::get('/manage-teacher/{teacher}/edit', [TeacherController::class, 'edit'])->name('teacher.edit');
+        Route::put('/manage-teacher/{teacher}', [TeacherController::class, 'update'])->name('teacher.update');
+        Route::delete('/manage-teacher/{teacher}', [TeacherController::class, 'destroy'])->name('teacher.destroy');
     });
 
     Route::post('/logout', [AuthController::class, 'destroy'])->name('logout');
 });
-
 

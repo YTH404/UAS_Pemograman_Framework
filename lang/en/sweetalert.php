@@ -23,6 +23,12 @@ return [
             'text' => 'This will permanently remove :name.',
             'confirm' => 'Yes, delete',
         ],
+
+        'teacher' => [
+            'title' => 'Delete teacher?',
+            'text' => 'This will permanently remove :name.',
+            'confirm' => 'Yes, delete',
+        ],
     ],
 
     'flash' => [
@@ -30,6 +36,12 @@ return [
             'created' => 'Class has been created.',
             'updated' => 'Class has been updated.',
             'deleted' => 'Class has been deleted.',
+        ],
+
+        'teacher' => [
+            'created' => 'Teacher has been created.',
+            'updated' => 'Teacher has been updated.',
+            'deleted' => 'Teacher has been deleted.',
         ],
     ],
 ];
