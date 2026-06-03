@@ -43,9 +43,14 @@ class Classes extends Model
         return $this->hasMany(StudentClass::class, 'class_id');
     }
 
+    public function courses(): HasMany
+    {
+        return $this->hasMany(Course::class, 'class_id');
+    }
+
     public function hasLinkedData(): bool
     {
-        return $this->studentClasses()->exists();
+        return $this->studentClasses()->exists() || $this->courses()->exists();
     }
 
     

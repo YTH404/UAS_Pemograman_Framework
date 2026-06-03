@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\ClassController;
+use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
@@ -35,6 +36,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/class/{class}/edit', [ClassController::class, 'edit'])->name('class.edit');
         Route::put('/class/{class}', [ClassController::class, 'update'])->name('class.update');
         Route::delete('/class/{class}', [ClassController::class, 'destroy'])->name('class.destroy');
+        Route::prefix('/class/{class}/course')->name('manage-class.')->group(function () {
+            Route::get('/', [CourseController::class, 'index'])->name('index');
+            Route::get('/create', [CourseController::class, 'create'])->name('create');
+            Route::post('/', [CourseController::class, 'store'])->name('store');
+            Route::get('/{course}/edit', [CourseController::class, 'edit'])->name('edit');
+            Route::put('/{course}', [CourseController::class, 'update'])->name('update');
+            Route::delete('/{course}', [CourseController::class, 'destroy'])->name('destroy');
+        });
         
         Route::get('/teacher', [TeacherController::class, 'index'])->name('teacher.index');
         Route::get('/teacher/create', [TeacherController::class, 'create'])->name('teacher.create');

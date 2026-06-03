@@ -10,7 +10,7 @@ class ClassController extends Controller
 {
     public function index()
     {
-        $classes = Classes::withCount('studentClasses')->get();
+        $classes = Classes::withCount(['studentClasses', 'courses'])->get();
         return view('admin.class.index', compact('classes'));
     }
 

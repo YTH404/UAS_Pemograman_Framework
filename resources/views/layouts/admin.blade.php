@@ -15,7 +15,7 @@
                 ['label' => 'Dashboard', 'route' => route('admin.dashboard'), 'active' => request()->routeIs('admin.dashboard')],
                 ['label' => 'Manage Teachers', 'route' => route('admin.teacher.index'), 'active' => request()->routeIs('admin.teacher.*')],
                 ['label' => 'Manage Students', 'route' => route('admin.student.index'), 'active' => request()->routeIs('admin.student.*')],
-                ['label' => 'Manage Classes', 'route' => route('admin.class.index'), 'active' => request()->routeIs('admin.class.*')],
+                ['label' => 'Manage Classes', 'route' => route('admin.class.index'), 'active' => request()->routeIs('admin.class.*', 'admin.manage-class.*')],
             ];
         @endphp
 

@@ -35,6 +35,12 @@ return [
             'text' => 'This will remove :name and their class assignment.',
             'confirm' => 'Yes, delete',
         ],
+
+        'course' => [
+            'title' => 'Delete course?',
+            'text' => 'This will remove :name from this class.',
+            'confirm' => 'Yes, delete',
+        ],
     ],
 
     'flash' => [
@@ -47,7 +53,7 @@ return [
             'created' => 'Class has been created.',
             'updated' => 'Class has been updated.',
             'deleted' => 'Class has been deleted.',
-            'delete_blocked' => 'Class cannot be deleted while students are assigned to it.',
+            'delete_blocked' => 'Class cannot be deleted while students or courses are linked to it.',
         ],
 
         'teacher' => [
@@ -60,6 +66,12 @@ return [
             'created' => 'Student has been created.',
             'updated' => 'Student has been updated.',
             'deleted' => 'Student has been deleted.',
+        ],
+
+        'course' => [
+            'created' => 'Course has been created.',
+            'updated' => 'Course has been updated.',
+            'deleted' => 'Course has been deleted.',
         ],
     ],
 ];

@@ -19,10 +19,12 @@ return [
         'class_code' => 'class code',
         'class_id' => 'class',
         'class_name' => 'class name',
+        'course_name' => 'course name',
         'login' => 'username',
         'name' => 'name',
         'password' => 'password',
         'password_confirmation' => 'password confirmation',
+        'teacher_id' => 'teacher',
         'username' => 'username',
     ],
 
@@ -36,6 +38,10 @@ return [
         'class_id' => [
             'required' => 'Please choose a class.',
             'exists' => 'The selected class does not exist.',
+        ],
+        'teacher_id' => [
+            'required' => 'Please choose a teacher.',
+            'exists' => 'The selected teacher does not exist.',
         ],
         'password' => [
             'confirmed' => 'The password confirmation does not match.',
