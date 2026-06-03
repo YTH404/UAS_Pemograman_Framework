@@ -14,7 +14,7 @@
     </section>
 
     <section class="overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/70">
-        <form method="POST" action="{{ route('admin.manage-class.update', [$class->id, $course->id]) }}" class="space-y-6">
+        <form method="POST" action="{{ route('admin.manage-class.course.update', [$class->id, $course->id]) }}" class="space-y-6">
             @csrf
             @method('PUT')
 
@@ -42,7 +42,7 @@
             </div>
 
             <div class="flex flex-wrap items-center justify-end gap-3">
-                <a href="{{ route('admin.manage-class.index', $class->id) }}" class="rounded-2xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">Cancel</a>
+                <a href="{{ route('admin.manage-class.course.index', $class->id) }}" class="rounded-2xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">Cancel</a>
                 <button type="submit" class="rounded-2xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:-translate-y-0.5 hover:bg-slate-800">Update Course</button>
             </div>
         </form>

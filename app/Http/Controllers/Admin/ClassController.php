@@ -19,6 +19,21 @@ class ClassController extends Controller
         return view('admin.class.create');
     }
 
+    public function manage(string $class)
+    {
+        $class = Classes::withCount(['courses', 'studentClasses'])->findOrFail($class);
+
+        return view('admin.class.manage', compact('class'));
+    }
+
+    public function students(string $class)
+    {
+        $class = Classes::findOrFail($class);
+        $studentClasses = $class->studentClasses()->with('student')->get();
+
+        return view('admin.class.student.index', compact('class', 'studentClasses'));
+    }
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([

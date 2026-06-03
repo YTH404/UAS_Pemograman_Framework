@@ -36,13 +36,18 @@ Route::middleware('auth')->group(function () {
         Route::get('/class/{class}/edit', [ClassController::class, 'edit'])->name('class.edit');
         Route::put('/class/{class}', [ClassController::class, 'update'])->name('class.update');
         Route::delete('/class/{class}', [ClassController::class, 'destroy'])->name('class.destroy');
-        Route::prefix('/class/{class}/course')->name('manage-class.')->group(function () {
-            Route::get('/', [CourseController::class, 'index'])->name('index');
-            Route::get('/create', [CourseController::class, 'create'])->name('create');
-            Route::post('/', [CourseController::class, 'store'])->name('store');
-            Route::get('/{course}/edit', [CourseController::class, 'edit'])->name('edit');
-            Route::put('/{course}', [CourseController::class, 'update'])->name('update');
-            Route::delete('/{course}', [CourseController::class, 'destroy'])->name('destroy');
+        Route::prefix('/class/{class}/manage')->name('manage-class.')->group(function () {
+            Route::get('/', [ClassController::class, 'manage'])->name('index');
+            Route::get('/student', [ClassController::class, 'students'])->name('student.index');
+
+            Route::prefix('/course')->name('course.')->group(function () {
+                Route::get('/', [CourseController::class, 'index'])->name('index');
+                Route::get('/create', [CourseController::class, 'create'])->name('create');
+                Route::post('/', [CourseController::class, 'store'])->name('store');
+                Route::get('/{course}/edit', [CourseController::class, 'edit'])->name('edit');
+                Route::put('/{course}', [CourseController::class, 'update'])->name('update');
+                Route::delete('/{course}', [CourseController::class, 'destroy'])->name('destroy');
+            });
         });
         
         Route::get('/teacher', [TeacherController::class, 'index'])->name('teacher.index');

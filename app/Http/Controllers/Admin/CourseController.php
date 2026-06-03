@@ -35,7 +35,7 @@ class CourseController extends Controller
 
         $class->courses()->create($validatedData);
 
-        return redirect()->route('admin.manage-class.index', $class->id)->with('success', __('sweetalert.flash.course.created'));
+        return redirect()->route('admin.manage-class.course.index', $class->id)->with('success', __('sweetalert.flash.course.created'));
     }
 
     public function edit(string $class, string $course)
@@ -54,7 +54,7 @@ class CourseController extends Controller
 
         $course->update($this->validateCourse($request));
 
-        return redirect()->route('admin.manage-class.index', $class->id)->with('success', __('sweetalert.flash.course.updated'));
+        return redirect()->route('admin.manage-class.course.index', $class->id)->with('success', __('sweetalert.flash.course.updated'));
     }
 
     public function destroy(string $class, string $course)
@@ -64,7 +64,7 @@ class CourseController extends Controller
 
         $course->delete();
 
-        return redirect()->route('admin.manage-class.index', $class->id)->with('success', __('sweetalert.flash.course.deleted'));
+        return redirect()->route('admin.manage-class.course.index', $class->id)->with('success', __('sweetalert.flash.course.deleted'));
     }
 
     private function validateCourse(Request $request): array
