@@ -13,45 +13,6 @@
         <x-sweet-alert-messages />
 
         @php
-            $courseSummary = [
-                [
-                    'name' => 'Web Programming Fundamentals',
-                    'teacher' => 'Dina Rahma',
-                    'progress' => 78,
-                    'deadline' => 'Tomorrow · 16:00',
-                ],
-                [
-                    'name' => 'Database Design and SQL',
-                    'teacher' => 'Arif Pratama',
-                    'progress' => 64,
-                    'deadline' => 'Thu · 11:30',
-                ],
-                [
-                    'name' => 'UI for Student Applications',
-                    'teacher' => 'Maya Lestari',
-                    'progress' => 91,
-                    'deadline' => 'Fri · 09:00',
-                ],
-                [
-                    'name' => 'Web Programming Fundamentals',
-                    'teacher' => 'Dina Rahma',
-                    'progress' => 78,
-                    'deadline' => 'Tomorrow · 16:00',
-                ],
-                [
-                    'name' => 'Database Design and SQL',
-                    'teacher' => 'Arif Pratama',
-                    'progress' => 64,
-                    'deadline' => 'Thu · 11:30',
-                ],
-                [
-                    'name' => 'UI for Student Applications',
-                    'teacher' => 'Maya Lestari',
-                    'progress' => 91,
-                    'deadline' => 'Fri · 09:00',
-                ],
-            ];
-
             $upcomingAssignments = [
                 [
                     'course' => 'Web Programming Fundamentals',
@@ -91,18 +52,22 @@
                 </a>
 
                 <div class="flex items-center gap-8">
+
+                    <div class="hidden items-center gap-3 md:flex">
+                        <div class="text-right">
+                            <p class="text-sm font-semibold text-slate-900">
+                                {{ $student?->name ?? auth()->user()->name }}
+                                <span class="font-medium text-slate-500">- {{ $class?->class_name ?? 'No class assigned' }}</span>
+                            </p>
+                        </div>
+                    </div>
+
                     <form method="POST" action="{{ route('logout') }}" data-swal-logout>
                         @csrf
                         <button type="submit" class="inline-flex items-center text-sm font-semibold text-rose-600 underline decoration-transparent underline-offset-4 transition duration-200 hover:text-rose-700 hover:decoration-rose-300 focus-visible:outline-none focus-visible:decoration-rose-400">
                             Logout
                         </button>
                     </form>
-
-                    <div class="hidden items-center gap-3 md:flex">
-                        <div class="text-right">
-                            <p class="text-sm font-semibold text-slate-900">Alya Putri <span class="font-medium text-slate-500">- Informatika</span></p>
-                        </div>
-                    </div>
                 </div>
             </header>
 
@@ -162,7 +127,7 @@
 
                 <section class="space-y-6">
                     <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-                        @foreach ($courseSummary as $course)
+                        @forelse ($courseSummary as $course)
                             @php
                                 $style = $courseCardStyles[array_rand($courseCardStyles)];
                                 $shape = $shapeSizes[array_rand($shapeSizes)];
@@ -186,7 +151,11 @@
                                     </div>
                                 </div>
                             </article>
-                        @endforeach
+                        @empty
+                            <div class="rounded-[1.75rem] border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm md:col-span-2 xl:col-span-3">
+                                No courses are assigned to your class yet.
+                            </div>
+                        @endforelse
                     </div>
                 </section>
             </main>

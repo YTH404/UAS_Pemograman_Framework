@@ -13,41 +13,6 @@
         <x-sweet-alert-messages />
 
         @php
-            $classOptions = ['Class A', 'Class B', 'Class C', 'Class D'];
-
-            $teacherTotals = [
-                ['label' => 'Total class assigned', 'value' => 4, 'note' => 'Active groups this term'],
-                ['label' => 'Total course assigned', 'value' => 7, 'note' => 'Courses under your supervision'],
-                ['label' => 'Total course in this class', 'value' => 3, 'note' => 'Courses opened in the selected class'],
-            ];
-
-            $classCourses = [
-                [
-                    'name' => 'Web Programming Fundamentals',
-                    'student_enrolled' => 28,
-                    'pending_submissions' => 5,
-                    'submitted_submissions' => 23,
-                ],
-                [
-                    'name' => 'Database Design and SQL',
-                    'student_enrolled' => 31,
-                    'pending_submissions' => 8,
-                    'submitted_submissions' => 23,
-                ],
-                [
-                    'name' => 'UI for Student Applications',
-                    'student_enrolled' => 25,
-                    'pending_submissions' => 2,
-                    'submitted_submissions' => 23,
-                ],
-                [
-                    'name' => 'Software Engineering Basics',
-                    'student_enrolled' => 29,
-                    'pending_submissions' => 11,
-                    'submitted_submissions' => 18,
-                ],
-            ];
-
             $courseCardStyles = [
                 ['surface' => 'bg-sky-50', 'shape' => 'bg-sky-200/70'],
                 ['surface' => 'bg-emerald-50', 'shape' => 'bg-emerald-200/70'],
@@ -72,18 +37,21 @@
                 </a>
 
                 <div class="flex items-center gap-8">
+
+                    <div class="hidden items-center gap-3 md:flex">
+                        <div class="text-right">
+                            <p class="text-sm font-semibold text-slate-900">
+                                {{ $teacher->name }} 
+                                <span class="font-medium text-slate-500">- Teacher</span></p>
+                        </div>
+                    </div>
+
                     <form method="POST" action="{{ route('logout') }}" data-swal-logout>
                         @csrf
                         <button type="submit" class="inline-flex items-center text-sm font-semibold text-rose-600 underline decoration-transparent underline-offset-4 transition duration-200 hover:text-rose-700 hover:decoration-rose-300 focus-visible:outline-none focus-visible:decoration-rose-400">
                             Logout
                         </button>
                     </form>
-
-                    <div class="hidden items-center gap-3 md:flex">
-                        <div class="text-right">
-                            <p class="text-sm font-semibold text-slate-900">Dina Rahma <span class="font-medium text-slate-500">- Dosen</span></p>
-                        </div>
-                    </div>
                 </div>
             </header>
 
@@ -107,21 +75,6 @@
                         </div>
                     </article>
 
-                    <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-                        {{-- <div>
-                            <p class="text-sm font-semibold uppercase tracking-[0.22em] text-sky-700">Assigned classes</p>
-                            <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Select the class you want to review</h2>
-                        </div> --}}
-
-                        <label class="inline-flex min-w-64 flex-col gap-2 rounded-3xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
-                            <span class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Choose class</span>
-                            <select class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:bg-white">
-                                @foreach ($classOptions as $classOption)
-                                    <option>{{ $classOption }}</option>
-                                @endforeach
-                            </select>
-                        </label>
-                    </div>
                 </section>
 
                 <div class="flex items-center gap-4">
@@ -132,7 +85,7 @@
 
                 <section class="space-y-6">
                     <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-                        @foreach ($classCourses as $course)
+                        @forelse ($classCourses as $course)
                             @php
                                 $style = $courseCardStyles[array_rand($courseCardStyles)];
                                 $shape = $shapeSizes[array_rand($shapeSizes)];
@@ -143,6 +96,7 @@
 
                                 <div class="relative">
                                     <h3 class="text-xl font-semibold text-slate-950">{{ $course['name'] }}</h3>
+                                    <p class="mt-2 text-sm text-slate-600">Class: {{ $course['class_name'] }}</p>
 
                                     <div class="mt-6 space-y-4">
                                         <div class="flex items-center justify-between text-sm">
@@ -160,7 +114,11 @@
                                     </div>
                                 </div>
                             </article>
-                        @endforeach
+                        @empty
+                            <div class="rounded-[1.75rem] border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm md:col-span-2 xl:col-span-3">
+                                No courses are assigned to you yet.
+                            </div>
+                        @endforelse
                     </div>
                 </section>
             </main>
