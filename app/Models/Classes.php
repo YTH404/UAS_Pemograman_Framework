@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Classes extends Model
@@ -31,6 +32,11 @@ class Classes extends Model
             $class->class_code = $baseCode . '-deleted-' . $counter;
             $class->saveQuietly();
         });
+    }
+
+    public function studentClasses(): HasMany
+    {
+        return $this->hasMany(StudentClass::class, 'class_id');
     }
 
     

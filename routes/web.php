@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\ClassController;
+use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
 use App\Http\Controllers\Teacher\DashboardController as TeacherDashboardController;
@@ -41,8 +42,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/teacher/{teacher}/edit', [TeacherController::class, 'edit'])->name('teacher.edit');
         Route::put('/teacher/{teacher}', [TeacherController::class, 'update'])->name('teacher.update');
         Route::delete('/teacher/{teacher}', [TeacherController::class, 'destroy'])->name('teacher.destroy');
+
+        Route::get('/student', [StudentController::class, 'index'])->name('student.index');
+        Route::get('/student/create', [StudentController::class, 'create'])->name('student.create');
+        Route::post('/student', [StudentController::class, 'store'])->name('student.store');
+        Route::get('/student/{student}/edit', [StudentController::class, 'edit'])->name('student.edit');
+        Route::put('/student/{student}', [StudentController::class, 'update'])->name('student.update');
+        Route::delete('/student/{student}', [StudentController::class, 'destroy'])->name('student.destroy');
     });
 
     Route::post('/logout', [AuthController::class, 'destroy'])->name('logout');
 });
-

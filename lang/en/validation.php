@@ -13,9 +13,11 @@ return [
     'required' => 'The :attribute field is required.',
     'string' => 'The :attribute must be text.',
     'unique' => 'The :attribute has already been taken.',
+    'exists' => 'The selected :attribute is invalid.',
 
     'attributes' => [
         'class_code' => 'class code',
+        'class_id' => 'class',
         'class_name' => 'class name',
         'login' => 'username',
         'name' => 'name',
@@ -30,6 +32,10 @@ return [
         ],
         'username' => [
             'unique' => 'This username is already used.',
+        ],
+        'class_id' => [
+            'required' => 'Please choose a class.',
+            'exists' => 'The selected class does not exist.',
         ],
         'password' => [
             'confirmed' => 'The password confirmation does not match.',
