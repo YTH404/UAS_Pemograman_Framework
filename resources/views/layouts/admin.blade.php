@@ -18,9 +18,7 @@
             ];
         @endphp
 
-        @if (session('success'))
-            <div class="hidden" data-swal-success="{{ session('success') }}"></div>
-        @endif
+        <x-sweet-alert-messages />
 
         <div class="flex min-h-screen">
             <!-- Sidebar -->

@@ -10,6 +10,8 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="min-h-screen bg-slate-50 text-slate-900 antialiased">
+        <x-sweet-alert-messages />
+
         @php
             $courseSummary = [
                 [
