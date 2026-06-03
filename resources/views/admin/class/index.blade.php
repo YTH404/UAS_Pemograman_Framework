@@ -37,7 +37,7 @@
                             <td class="px-6 py-4 text-sm">
                                 <div class="flex gap-2">
                                     <a href="{{ route('admin.class.edit', $class['id']) }}" class="rounded-lg px-3 py-2 text-xs font-semibold text-sky-700 transition-colors hover:bg-sky-100">Edit</a>
-                                    <form method="POST" action="{{ route('admin.class.destroy', $class['id']) }}" onsubmit="return confirm('Are you sure you want to delete this class?');">
+                                    <form method="POST" action="{{ route('admin.class.destroy', $class['id']) }}" data-swal-delete data-swal-title="Delete class?" data-swal-text="This will permanently remove {{ $class['class_name'] }}." data-swal-confirm="Yes, delete">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="rounded-lg px-3 py-2 text-xs font-semibold text-red-600 transition-colors hover:bg-red-100">Delete</button>

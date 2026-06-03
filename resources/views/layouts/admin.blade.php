@@ -18,6 +18,10 @@
             ];
         @endphp
 
+        @if (session('success'))
+            <div class="hidden" data-swal-success="{{ session('success') }}"></div>
+        @endif
+
         <div class="flex min-h-screen">
             <!-- Sidebar -->
             <aside class="fixed inset-y-0 left-0 z-40 w-64 border-r border-slate-200 bg-white shadow-lg lg:sticky lg:top-0 lg:h-screen lg:self-start">
@@ -46,7 +50,7 @@
                                 <p class="text-xs text-slate-500">System administrator</p>
                             </div>
                         </div>
-                        <form method="POST" action="{{ route('logout') }}" class="border-t border-slate-200 px-4 py-4">
+                        <form method="POST" action="{{ route('logout') }}" class="border-t border-slate-200 px-4 py-4" data-swal-logout>
                             @csrf
                             <button type="submit" class="w-full rounded-2xl bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-700 shadow-sm transition duration-200 hover:bg-rose-100 hover:shadow-md hover:shadow-rose-200/70">
                                 Logout
