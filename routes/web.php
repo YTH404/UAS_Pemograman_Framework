@@ -22,10 +22,12 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::middleware(['role:student'])->group(function () {
         Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard/course/{course}', [StudentDashboardController::class, 'showCourse'])->name('student.course.show');
     });
 
     Route::middleware(['role:teacher'])->group(function () {
         Route::get('/dashboard-teacher', [TeacherDashboardController::class, 'index'])->name('teacher.dashboard');
+        Route::get('/dashboard-teacher/course/{course}', [TeacherDashboardController::class, 'showCourse'])->name('teacher.course.show');
     });
 
     Route::prefix('admin')->middleware(['role:admin'])->name('admin.')->group(function () {

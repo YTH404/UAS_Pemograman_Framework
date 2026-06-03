@@ -90,13 +90,14 @@
                                 $style = $courseCardStyles[array_rand($courseCardStyles)];
                                 $shape = $shapeSizes[array_rand($shapeSizes)];
                             @endphp
-                            <article class="relative overflow-hidden rounded-[1.75rem] border border-slate-200 {{ $style['surface'] }} p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/70">
+                            <a href="{{ route('teacher.course.show', $course['id']) }}" class="relative block overflow-hidden rounded-[1.75rem] border border-slate-200 {{ $style['surface'] }} p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/70">
                                 <div class="absolute -right-6 -top-4 {{ $shape }} rounded-full {{ $style['shape'] }} opacity-60"></div>
                                 <div class="absolute bottom-[-1.25rem] left-[-1rem] h-16 w-16 rounded-[1.5rem] {{ $style['shape'] }} opacity-30 rotate-12"></div>
 
                                 <div class="relative">
                                     <h3 class="text-xl font-semibold text-slate-950">{{ $course['name'] }}</h3>
                                     <p class="mt-2 text-sm text-slate-600">Class: {{ $course['class_name'] }}</p>
+                                    <p class="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{{ $course['class_code'] }}</p>
 
                                     <div class="mt-6 space-y-4">
                                         <div class="flex items-center justify-between text-sm">
@@ -112,8 +113,10 @@
                                             <span class="font-semibold text-slate-950">{{ $course['submitted_submissions'] }}</span>
                                         </div>
                                     </div>
+
+                                    <p class="mt-5 text-sm font-semibold text-sky-700">Open course</p>
                                 </div>
-                            </article>
+                            </a>
                         @empty
                             <div class="rounded-[1.75rem] border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm md:col-span-2 xl:col-span-3">
                                 No courses are assigned to you yet.
