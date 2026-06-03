@@ -44,7 +44,7 @@
 
     <section class="space-y-4">
         <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            <a href="{{ route('admin.manage-teacher') }}" class="group relative overflow-hidden rounded-[1.75rem] border border-slate-200 bg-sky-50 p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/70">
+            <a href="{{ route('admin.teacher.index') }}" class="group relative overflow-hidden rounded-[1.75rem] border border-slate-200 bg-sky-50 p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/70">
                 <div class="absolute -right-6 -top-4 h-24 w-24 rounded-full bg-sky-200/70 opacity-60"></div>
                 <div class="relative">
                     <h3 class="text-xl font-semibold text-slate-950">Manage Teachers</h3>
@@ -55,7 +55,7 @@
                 </div>
             </a>
 
-            <a href="{{ route('admin.manage-class') }}" class="group relative overflow-hidden rounded-[1.75rem] border border-slate-200 bg-emerald-50 p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/70">
+            <a href="{{ route('admin.class.index') }}" class="group relative overflow-hidden rounded-[1.75rem] border border-slate-200 bg-emerald-50 p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/70">
                 <div class="absolute -right-6 -top-4 h-24 w-24 rounded-full bg-emerald-200/70 opacity-60"></div>
                 <div class="relative">
                     <h3 class="text-xl font-semibold text-slate-950">Manage Classes</h3>

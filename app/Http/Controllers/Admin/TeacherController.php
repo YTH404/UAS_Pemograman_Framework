@@ -30,7 +30,7 @@ class TeacherController extends Controller
 
         Teacher::create($validatedData);
 
-        return redirect()->route('admin.manage-teacher')->with('success', __('sweetalert.flash.teacher.created'));
+        return redirect()->route('admin.teacher.index')->with('success', __('sweetalert.flash.teacher.created'));
     }
 
     public function edit(string $teacher)
@@ -60,7 +60,7 @@ class TeacherController extends Controller
 
         $teacher->update($validatedData);
 
-        return redirect()->route('admin.manage-teacher')->with('success', __('sweetalert.flash.teacher.updated'));
+        return redirect()->route('admin.teacher.index')->with('success', __('sweetalert.flash.teacher.updated'));
     }
 
     public function destroy(string $teacher)
@@ -68,6 +68,6 @@ class TeacherController extends Controller
         $teacher = Teacher::findOrFail($teacher);
         $teacher->delete();
 
-        return redirect()->route('admin.manage-teacher')->with('success', __('sweetalert.flash.teacher.deleted'));
+        return redirect()->route('admin.teacher.index')->with('success', __('sweetalert.flash.teacher.deleted'));
     }
 }

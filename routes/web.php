@@ -28,19 +28,19 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('admin')->middleware(['role:admin'])->name('admin.')->group(function () {
         Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
-        Route::get('/manage-class', [ClassController::class, 'index'])->name('manage-class');
-        Route::get('/manage-class/create', [ClassController::class, 'create'])->name('class.create');
-        Route::post('/manage-class', [ClassController::class, 'store'])->name('manage-class.store');
-        Route::get('/manage-class/{class}/edit', [ClassController::class, 'edit'])->name('class.edit');
-        Route::put('/manage-class/{class}', [ClassController::class, 'update'])->name('class.update');
-        Route::delete('/manage-class/{class}', [ClassController::class, 'destroy'])->name('class.destroy');
+        Route::get('/class', [ClassController::class, 'index'])->name('class.index');
+        Route::get('/class/create', [ClassController::class, 'create'])->name('class.create');
+        Route::post('/class', [ClassController::class, 'store'])->name('class.store');
+        Route::get('/class/{class}/edit', [ClassController::class, 'edit'])->name('class.edit');
+        Route::put('/class/{class}', [ClassController::class, 'update'])->name('class.update');
+        Route::delete('/class/{class}', [ClassController::class, 'destroy'])->name('class.destroy');
         
-        Route::get('/manage-teacher', [TeacherController::class, 'index'])->name('manage-teacher');
-        Route::get('/manage-teacher/create', [TeacherController::class, 'create'])->name('teacher.create');
-        Route::post('/manage-teacher', [TeacherController::class, 'store'])->name('manage-teacher.store');
-        Route::get('/manage-teacher/{teacher}/edit', [TeacherController::class, 'edit'])->name('teacher.edit');
-        Route::put('/manage-teacher/{teacher}', [TeacherController::class, 'update'])->name('teacher.update');
-        Route::delete('/manage-teacher/{teacher}', [TeacherController::class, 'destroy'])->name('teacher.destroy');
+        Route::get('/teacher', [TeacherController::class, 'index'])->name('teacher.index');
+        Route::get('/teacher/create', [TeacherController::class, 'create'])->name('teacher.create');
+        Route::post('/teacher', [TeacherController::class, 'store'])->name('teacher.store');
+        Route::get('/teacher/{teacher}/edit', [TeacherController::class, 'edit'])->name('teacher.edit');
+        Route::put('/teacher/{teacher}', [TeacherController::class, 'update'])->name('teacher.update');
+        Route::delete('/teacher/{teacher}', [TeacherController::class, 'destroy'])->name('teacher.destroy');
     });
 
     Route::post('/logout', [AuthController::class, 'destroy'])->name('logout');

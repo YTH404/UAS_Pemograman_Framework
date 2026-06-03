@@ -13,8 +13,8 @@
         @php
             $navItems = [
                 ['label' => 'Dashboard', 'route' => route('admin.dashboard'), 'active' => request()->routeIs('admin.dashboard')],
-                ['label' => 'Manage Teachers', 'route' => route('admin.manage-teacher'), 'active' => request()->routeIs('admin.manage-teacher')],
-                ['label' => 'Manage Classes', 'route' => route('admin.manage-class'), 'active' => request()->routeIs('admin.manage-class')],
+                ['label' => 'Manage Teachers', 'route' => route('admin.teacher.index'), 'active' => request()->routeIs('admin.teacher.index')],
+                ['label' => 'Manage Classes', 'route' => route('admin.class.index'), 'active' => request()->routeIs('admin.class.index')],
             ];
         @endphp
 

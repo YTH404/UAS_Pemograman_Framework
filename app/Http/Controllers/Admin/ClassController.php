@@ -28,7 +28,7 @@ class ClassController extends Controller
 
         Classes::create($validatedData);
 
-        return redirect()->route('admin.manage-class')->with('success', __('sweetalert.flash.class.created'));
+        return redirect()->route('admin.class.index')->with('success', __('sweetalert.flash.class.created'));
     }
 
     public function edit(string $class)
@@ -47,7 +47,7 @@ class ClassController extends Controller
         $class = Classes::findOrFail($class);
         $class->update($validatedData);
 
-        return redirect()->route('admin.manage-class')->with('success', __('sweetalert.flash.class.updated'));
+        return redirect()->route('admin.class.index')->with('success', __('sweetalert.flash.class.updated'));
     }
 
     public function destroy(string $class)
@@ -55,6 +55,6 @@ class ClassController extends Controller
         $class = Classes::findOrFail($class);
         $class->delete();
 
-        return redirect()->route('admin.manage-class')->with('success', __('sweetalert.flash.class.deleted'));
+        return redirect()->route('admin.class.index')->with('success', __('sweetalert.flash.class.deleted'));
     }
 }

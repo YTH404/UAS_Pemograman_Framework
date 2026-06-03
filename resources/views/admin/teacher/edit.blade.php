@@ -48,7 +48,7 @@
             </div>
 
             <div class="flex flex-wrap items-center justify-end gap-3">
-                <a href="{{ route('admin.manage-teacher') }}" class="rounded-2xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">Cancel</a>
+                <a href="{{ route('admin.teacher.index') }}" class="rounded-2xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">Cancel</a>
                 <button type="submit" class="rounded-2xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:-translate-y-0.5 hover:bg-slate-800">Update Teacher</button>
             </div>
         </form>
