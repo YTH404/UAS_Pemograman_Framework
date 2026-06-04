@@ -91,5 +91,17 @@ return [
             'closed' => 'This attendance has already closed.',
             'already_filled' => 'You have already filled this attendance.',
         ],
+
+        'assignment' => [
+            'created' => 'Assignment has been created.',
+            'updated' => 'Assignment has been updated.',
+            'meeting_locked' => 'This meeting is still locked. Add content to the previous meeting first.',
+        ],
+
+        'submission' => [
+            'submitted' => 'Your assignment has been submitted.',
+            'not_open' => 'This assignment is not open yet.',
+            'closed' => 'This assignment has already closed.',
+        ],
     ],
 ];

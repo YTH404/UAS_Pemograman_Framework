@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Student;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\Student;
+use App\Models\Submission;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -39,10 +40,15 @@ class DashboardController extends Controller
                 'classes',
                 'teacher',
                 'learningMaterials',
+                'assignments',
                 'attendances.attendanceStudents' => fn ($query) => $query->where('student_id', $student->id),
             ])
             ->where('class_id', $class?->id)
             ->findOrFail($course);
+        $this->syncMissingSubmissions($course, $student);
+        $course->load([
+            'assignments.submissions' => fn ($query) => $query->where('student_id', $student->id)->with('files'),
+        ]);
         $meetings = $this->buildMeetings($course);
 
         return view('student.course.show', compact('student', 'class', 'course', 'meetings'));
@@ -56,7 +62,10 @@ class DashboardController extends Controller
         $attendancesByMeeting = $course->attendances->groupBy(
             fn ($attendance) => $this->normalizeMeetingTitle($attendance->meeting)
         );
-        $meetingsWithContent = collect([...$materialsByMeeting->keys(), ...$attendancesByMeeting->keys()])
+        $assignmentsByMeeting = $course->assignments->groupBy(
+            fn ($assignment) => $this->normalizeMeetingTitle($assignment->meeting)
+        );
+        $meetingsWithContent = collect([...$materialsByMeeting->keys(), ...$attendancesByMeeting->keys(), ...$assignmentsByMeeting->keys()])
             ->map(fn ($meeting) => $this->meetingNumber($meeting))
             ->filter()
             ->unique()
@@ -75,6 +84,7 @@ class DashboardController extends Controller
                 'items' => $this->placeholderItems($meeting),
                 'materials' => $materialsByMeeting->get('Pertemuan ' . $meeting, collect())->values(),
                 'attendances' => $this->attendanceCards($attendancesByMeeting->get('Pertemuan ' . $meeting, collect()), $course->id),
+                'assignments' => $this->assignmentCards($assignmentsByMeeting->get('Pertemuan ' . $meeting, collect()), $course->id),
             ])
             ->all();
     }
@@ -111,9 +121,7 @@ class DashboardController extends Controller
 
     private function placeholderItems(int $meeting): array
     {
-        return [
-            ['title' => $meeting === 1 ? 'Pengumpulan soal' : 'Pengumpulan project', 'type' => 'Submission', 'done' => false],
-        ];
+        return [];
     }
 
     private function attendanceCards($attendances, int $courseId)
@@ -165,6 +173,76 @@ class DashboardController extends Controller
             'label' => 'Fill Attendance',
             'variant' => 'action',
             'can_fill' => true,
+        ];
+    }
+
+    private function syncMissingSubmissions(Course $course, Student $student): void
+    {
+        $course->assignments->each(fn ($assignment) => Submission::firstOrCreate([
+            'assignment_id' => $assignment->id,
+            'student_id' => $student->id,
+        ]));
+    }
+
+    private function assignmentCards($assignments, int $courseId)
+    {
+        return $assignments
+            ->map(function ($assignment) use ($courseId) {
+                $submission = $assignment->submissions->first();
+                $status = $this->assignmentStatus($assignment, $submission);
+
+                return [
+                    'id' => $assignment->id,
+                    'title' => $assignment->title,
+                    'description' => $assignment->description,
+                    'started_at' => $assignment->started_at,
+                    'ended_at' => $assignment->ended_at,
+                    'status' => $status,
+                    'submit_url' => route('student.course.assignments.submit', [$courseId, $assignment->id]),
+                    'files' => $submission?->files?->map(fn ($file) => [
+                            'name' => $file->original_name,
+                            'url' => $file->fileUrl(),
+                        ])
+                        ->values() ?? collect(),
+                ];
+            })
+            ->values();
+    }
+
+    private function assignmentStatus($assignment, $submission): array
+    {
+        if (! $assignment->hasStarted()) {
+            return [
+                'label' => 'Not opened',
+                'variant' => 'muted',
+                'can_submit' => false,
+                'button_label' => null,
+            ];
+        }
+
+        if ($assignment->hasEnded()) {
+            return [
+                'label' => $submission?->submitted_at ? '✓ Submitted' : 'Closed',
+                'variant' => $submission?->submitted_at ? 'success' : 'danger',
+                'can_submit' => false,
+                'button_label' => null,
+            ];
+        }
+
+        if ($submission?->submitted_at !== null) {
+            return [
+                'label' => '✓ Submitted',
+                'variant' => 'success',
+                'can_submit' => true,
+                'button_label' => 'Replace Submission',
+            ];
+        }
+
+        return [
+            'label' => 'Submit Assignment',
+            'variant' => 'action',
+            'can_submit' => true,
+            'button_label' => 'Submit Assignment',
         ];
     }
 }

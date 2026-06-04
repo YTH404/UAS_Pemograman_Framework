@@ -73,6 +73,60 @@
                                     </div>
                                 @endforeach
 
+                                @foreach ($meeting['assignments'] as $assignment)
+                                    @php
+                                        $assignmentStatusClass = match ($assignment['status']['variant']) {
+                                            'success' => 'bg-emerald-100 text-emerald-700',
+                                            'danger' => 'bg-rose-100 text-rose-700',
+                                            'action' => 'border border-violet-300 bg-white text-violet-700 hover:bg-violet-50',
+                                            default => 'bg-slate-100 text-slate-600',
+                                        };
+                                    @endphp
+
+                                    <div class="rounded-[1.5rem] border border-violet-200 bg-violet-50/70 p-5 shadow-sm">
+                                        <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                                            <div>
+                                                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-violet-700">Assignment</p>
+                                                <h3 class="mt-2 text-lg font-semibold text-slate-950">{{ $assignment['title'] }}</h3>
+                                                @if ($assignment['description'])
+                                                    <p class="mt-2 text-sm leading-6 text-slate-600">{{ $assignment['description'] }}</p>
+                                                @endif
+                                                <p class="mt-2 text-sm leading-6 text-slate-600">
+                                                    Open: {{ $assignment['started_at']?->format('d M Y H:i') ?? '-' }} ·
+                                                    Close: {{ $assignment['ended_at']?->format('d M Y H:i') ?? '-' }}
+                                                </p>
+
+                                                @if ($assignment['files']->isNotEmpty())
+                                                    <div class="mt-3 flex flex-wrap gap-2">
+                                                        @foreach ($assignment['files'] as $file)
+                                                            <a href="{{ $file['url'] }}" target="_blank" class="rounded-full bg-white px-3 py-1 text-xs font-semibold text-violet-700 shadow-sm transition hover:bg-violet-100">{{ $file['name'] }}</a>
+                                                        @endforeach
+                                                    </div>
+                                                @endif
+                                            </div>
+
+                                            @if ($assignment['status']['can_submit'])
+                                                <button
+                                                    type="button"
+                                                    data-open-assignment-modal
+                                                    data-action="{{ $assignment['submit_url'] }}"
+                                                    data-title="{{ $assignment['title'] }}"
+                                                    data-started-at="{{ $assignment['started_at']?->format('d M Y H:i') ?? '-' }}"
+                                                    data-ended-at="{{ $assignment['ended_at']?->format('d M Y H:i') ?? '-' }}"
+                                                    data-button-label="{{ $assignment['status']['button_label'] }}"
+                                                    class="inline-flex w-fit items-center rounded-full px-4 py-2 text-sm font-semibold transition {{ $assignmentStatusClass }}"
+                                                >
+                                                    {{ $assignment['status']['button_label'] }}
+                                                </button>
+                                            @else
+                                                <span class="inline-flex w-fit items-center rounded-full px-4 py-2 text-sm font-semibold {{ $assignmentStatusClass }}">
+                                                    {{ $assignment['status']['label'] }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
+
                                 @foreach ($meeting['attendances'] as $attendance)
                                     @php
                                         $statusClass = match ($attendance['status']['variant']) {
@@ -181,6 +235,40 @@
             </div>
         </div>
 
+        <div class="fixed inset-0 z-50 hidden items-center justify-center overflow-y-auto overflow-x-clip bg-slate-950/60 px-4 py-8" data-assignment-modal>
+            <div class="w-full max-w-[calc(100vw-2rem)] rounded-[2rem] bg-white shadow-2xl shadow-slate-950/30 sm:max-w-lg">
+                <div class="flex items-start justify-between gap-4 border-b border-slate-200 px-6 py-5">
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-[0.22em] text-violet-700">Assignment</p>
+                        <h2 class="mt-2 text-2xl font-semibold tracking-tight text-slate-950" data-assignment-title>Submit assignment</h2>
+                    </div>
+                    <button type="button" data-close-assignment-modal class="rounded-full border border-slate-200 px-3 py-1 text-sm font-semibold text-slate-600 transition hover:bg-slate-100">Close</button>
+                </div>
+
+                <form method="POST" action="#" enctype="multipart/form-data" class="space-y-5 px-6 py-6" data-assignment-form>
+                    @csrf
+                    <div class="rounded-2xl border border-violet-200 bg-violet-50 px-4 py-3 text-sm leading-6 text-violet-800">
+                        Upload up to 5 files, max 10MB each. If you already submitted, these files will replace the previous files.
+                    </div>
+
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+                        <p><span class="font-semibold text-slate-800">Open:</span> <span data-assignment-started-at>-</span></p>
+                        <p><span class="font-semibold text-slate-800">Close:</span> <span data-assignment-ended-at>-</span></p>
+                    </div>
+
+                    <label class="block">
+                        <span class="mb-2 block text-sm font-medium text-slate-700">Files</span>
+                        <input type="file" name="files[]" multiple required class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-violet-500 focus:bg-white">
+                    </label>
+
+                    <div class="flex justify-end gap-3">
+                        <button type="button" data-close-assignment-modal class="rounded-2xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">Cancel</button>
+                        <button type="submit" data-assignment-submit class="rounded-2xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:-translate-y-0.5 hover:bg-slate-800">Submit Assignment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const modal = document.querySelector('[data-attendance-modal]');
@@ -216,6 +304,47 @@
                 });
 
                 document.querySelectorAll('[data-close-attendance-modal]').forEach((button) => {
+                    button.addEventListener('click', closeModal);
+                });
+            });
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const modal = document.querySelector('[data-assignment-modal]');
+                const form = document.querySelector('[data-assignment-form]');
+                const title = document.querySelector('[data-assignment-title]');
+                const startedAt = document.querySelector('[data-assignment-started-at]');
+                const endedAt = document.querySelector('[data-assignment-ended-at]');
+                const submit = document.querySelector('[data-assignment-submit]');
+
+                if (!modal || !form || !title || !startedAt || !endedAt || !submit) {
+                    return;
+                }
+
+                const openModal = () => {
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+                    document.body.classList.add('overflow-hidden');
+                };
+
+                const closeModal = () => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                    document.body.classList.remove('overflow-hidden');
+                };
+
+                document.querySelectorAll('[data-open-assignment-modal]').forEach((button) => {
+                    button.addEventListener('click', () => {
+                        form.reset();
+                        form.action = button.dataset.action;
+                        title.textContent = button.dataset.title || 'Submit assignment';
+                        startedAt.textContent = button.dataset.startedAt || '-';
+                        endedAt.textContent = button.dataset.endedAt || '-';
+                        submit.textContent = button.dataset.buttonLabel || 'Submit Assignment';
+                        openModal();
+                    });
+                });
+
+                document.querySelectorAll('[data-close-assignment-modal]').forEach((button) => {
                     button.addEventListener('click', closeModal);
                 });
             });

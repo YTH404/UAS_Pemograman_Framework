@@ -67,6 +67,11 @@ class Student extends Model
         return $this->hasMany(AttendanceStudent::class, 'student_id');
     }
 
+    public function submissions(): HasMany
+    {
+        return $this->hasMany(Submission::class, 'student_id');
+    }
+
     protected function casts(): array
     {
         return [

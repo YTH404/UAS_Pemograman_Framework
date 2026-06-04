@@ -70,6 +70,43 @@
                                     </div>
                                 @endforeach
 
+                                @foreach ($meeting['assignments'] as $assignment)
+                                    <div class="rounded-[1.5rem] border border-violet-200 bg-violet-50/70 p-5 shadow-sm">
+                                        <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                                            <div>
+                                                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-violet-700">Assignment</p>
+                                                <h3 class="mt-2 text-lg font-semibold text-slate-950">{{ $assignment['title'] }}</h3>
+                                                @if ($assignment['description'])
+                                                    <p class="mt-2 text-sm leading-6 text-slate-600">{{ $assignment['description'] }}</p>
+                                                @endif
+                                                <p class="mt-2 text-sm leading-6 text-slate-600">
+                                                    Open: {{ $assignment['started_at']?->format('d M Y H:i') ?? '-' }} ·
+                                                    Close: {{ $assignment['ended_at']?->format('d M Y H:i') ?? '-' }}
+                                                </p>
+                                            </div>
+
+                                            <div class="flex flex-wrap items-center gap-2">
+                                                <span class="inline-flex w-fit items-center rounded-full bg-white px-4 py-2 text-sm font-semibold text-violet-700 shadow-sm">
+                                                    {{ $assignment['submitted_count'] }}/{{ $assignment['total_count'] }} submitted
+                                                </span>
+                                                <button
+                                                    type="button"
+                                                    data-edit-assignment-modal
+                                                    data-action="{{ $assignment['update_url'] }}"
+                                                    data-meeting="{{ $meeting['title'] }}"
+                                                    data-title="{{ $assignment['title'] }}"
+                                                    data-description="{{ $assignment['description'] }}"
+                                                    data-started-at="{{ $assignment['started_at']?->format('Y-m-d\TH:i') }}"
+                                                    data-ended-at="{{ $assignment['ended_at']?->format('Y-m-d\TH:i') }}"
+                                                    class="rounded-full bg-white px-4 py-2 text-sm font-semibold text-sky-700 shadow-sm transition hover:bg-sky-50"
+                                                >
+                                                    Edit
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+
                                 @foreach ($meeting['attendances'] as $attendance)
                                     <div class="rounded-[1.5rem] border border-emerald-200 bg-emerald-50/70 p-5 shadow-sm">
                                         <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -177,7 +214,7 @@
                     <label class="block" data-activity-type-wrapper>
                         <span class="mb-2 block text-sm font-medium text-slate-700">Activity type</span>
                         <select name="activity_type" data-activity-type class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:bg-white">
-                            <option value="submission">Submission</option>
+                            <option value="submission">Assignment</option>
                             <option value="attendance">Attendance</option>
                             <option value="materials">Materials</option>
                         </select>
@@ -189,7 +226,7 @@
 
                     <div class="flex justify-end gap-3">
                         <button type="button" data-close-activity-modal class="rounded-2xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">Cancel</button>
-                        <button type="submit" data-activity-submit class="rounded-2xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:-translate-y-0.5 hover:bg-slate-800">Create Submission</button>
+                        <button type="submit" data-activity-submit class="rounded-2xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:-translate-y-0.5 hover:bg-slate-800">Create Assignment</button>
                     </div>
                 </form>
             </div>
@@ -212,6 +249,7 @@
                 let mode = 'create';
                 let currentMaterial = {};
                 let currentAttendance = {};
+                let currentAssignment = {};
 
                 const escapeHtml = (value = '') =>
                     String(value)
@@ -306,31 +344,33 @@
                     </div>
                 `;
 
+                const assignmentFields = () => `
+                    <label class="block">
+                        <span class="mb-2 block text-sm font-medium text-slate-700">Title</span>
+                        <input type="text" name="title" value="${escapeHtml(currentAssignment.title)}" placeholder="Pengumpulan project" required class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:bg-white">
+                    </label>
+                    <label class="block">
+                        <span class="mb-2 block text-sm font-medium text-slate-700">Description</span>
+                        <textarea name="description" rows="3" class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:bg-white">${escapeHtml(currentAssignment.description)}</textarea>
+                    </label>
+                    <div class="grid gap-5 md:grid-cols-2">
+                        <label class="block">
+                            <span class="mb-2 block text-sm font-medium text-slate-700">Open date/time</span>
+                            <input type="datetime-local" name="started_at" value="${escapeHtml(currentAssignment.startedAt)}" required class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:bg-white">
+                        </label>
+                        <label class="block">
+                            <span class="mb-2 block text-sm font-medium text-slate-700">Close date/time</span>
+                            <input type="datetime-local" name="ended_at" value="${escapeHtml(currentAssignment.endedAt)}" required class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:bg-white">
+                        </label>
+                    </div>
+                `;
+
                 const configs = {
                     submission: {
-                        action: @json(url('/dashboard-teacher/course/' . $course->id . '/submissions')),
-                        help: 'Create a placeholder assignment submission activity. Database logic will be connected later.',
-                        submit: 'Create Submission',
-                        fields: `
-                            <label class="block">
-                                <span class="mb-2 block text-sm font-medium text-slate-700">Title</span>
-                                <input type="text" name="title" placeholder="Pengumpulan project" class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:bg-white">
-                            </label>
-                            <label class="block">
-                                <span class="mb-2 block text-sm font-medium text-slate-700">Description</span>
-                                <textarea name="description" rows="3" class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:bg-white"></textarea>
-                            </label>
-                            <div class="grid gap-5 md:grid-cols-2">
-                                <label class="block">
-                                    <span class="mb-2 block text-sm font-medium text-slate-700">Deadline</span>
-                                    <input type="datetime-local" name="deadline" class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:bg-white">
-                                </label>
-                                <label class="block">
-                                    <span class="mb-2 block text-sm font-medium text-slate-700">Allowed file types</span>
-                                    <input type="text" name="allowed_file_types" placeholder="pdf, docx, zip" class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:bg-white">
-                                </label>
-                            </div>
-                        `,
+                        action: @json(route('teacher.course.assignments.store', $course->id)),
+                        help: 'Create an assignment window for this meeting. Every student in this class will receive a submission row automatically.',
+                        submit: 'Create Assignment',
+                        fields: assignmentFields,
                     },
                     attendance: {
                         action: @json(route('teacher.course.attendances.store', $course->id)),
@@ -350,15 +390,18 @@
                     const config = configs[typeSelect.value];
                     const isMaterialEdit = mode === 'edit' && typeSelect.value === 'materials';
                     const isAttendanceEdit = mode === 'edit' && typeSelect.value === 'attendance';
-                    form.action = isMaterialEdit ? currentMaterial.action : isAttendanceEdit ? currentAttendance.action : config.action;
-                    setMethod(isMaterialEdit || isAttendanceEdit ? 'PUT' : null);
+                    const isAssignmentEdit = mode === 'edit' && typeSelect.value === 'submission';
+                    form.action = isMaterialEdit ? currentMaterial.action : isAttendanceEdit ? currentAttendance.action : isAssignmentEdit ? currentAssignment.action : config.action;
+                    setMethod(isMaterialEdit || isAttendanceEdit || isAssignmentEdit ? 'PUT' : null);
                     help.textContent = isMaterialEdit
                         ? 'Update this learning material. Upload a document only if you want to replace the current file.'
                         : isAttendanceEdit
                             ? 'Update this attendance window. Students who already filled it will keep their submitted status.'
+                            : isAssignmentEdit
+                                ? 'Update this assignment window. Students who already submitted can still replace files before the close time.'
                             : config.help;
-                    submit.textContent = isMaterialEdit ? 'Update Material' : isAttendanceEdit ? 'Update Attendance' : config.submit;
-                    modalTitle.textContent = isMaterialEdit ? 'Edit material' : isAttendanceEdit ? 'Edit attendance' : 'Add course activity';
+                    submit.textContent = isMaterialEdit ? 'Update Material' : isAttendanceEdit ? 'Update Attendance' : isAssignmentEdit ? 'Update Assignment' : config.submit;
+                    modalTitle.textContent = isMaterialEdit ? 'Edit material' : isAttendanceEdit ? 'Edit attendance' : isAssignmentEdit ? 'Edit assignment' : 'Add course activity';
                     fields.innerHTML = typeof config.fields === 'function' ? config.fields() : config.fields;
                     bindMaterialTypeSelect();
                 };
@@ -380,8 +423,31 @@
                         mode = 'create';
                         currentMaterial = {};
                         currentAttendance = {};
+                        currentAssignment = {};
                         form.reset();
                         typeWrapper.classList.remove('hidden');
+                        typeSelect.value = 'submission';
+                        meetingInput.value = button.dataset.meeting;
+                        meetingLabel.textContent = button.dataset.meeting;
+                        setType();
+                        openModal();
+                    });
+                });
+
+                document.querySelectorAll('[data-edit-assignment-modal]').forEach((button) => {
+                    button.addEventListener('click', () => {
+                        mode = 'edit';
+                        currentMaterial = {};
+                        currentAttendance = {};
+                        currentAssignment = {
+                            action: button.dataset.action,
+                            title: button.dataset.title || '',
+                            description: button.dataset.description || '',
+                            startedAt: button.dataset.startedAt || '',
+                            endedAt: button.dataset.endedAt || '',
+                        };
+                        form.reset();
+                        typeWrapper.classList.add('hidden');
                         typeSelect.value = 'submission';
                         meetingInput.value = button.dataset.meeting;
                         meetingLabel.textContent = button.dataset.meeting;
@@ -394,6 +460,7 @@
                     button.addEventListener('click', () => {
                         mode = 'edit';
                         currentMaterial = {};
+                        currentAssignment = {};
                         currentAttendance = {
                             action: button.dataset.action,
                             title: button.dataset.title || '',
@@ -414,6 +481,7 @@
                     button.addEventListener('click', () => {
                         mode = 'edit';
                         currentAttendance = {};
+                        currentAssignment = {};
                         currentMaterial = {
                             action: button.dataset.action,
                             title: button.dataset.title || '',
@@ -438,6 +506,7 @@
                 typeSelect.addEventListener('change', () => {
                     currentMaterial = {};
                     currentAttendance = {};
+                    currentAssignment = {};
                     setType();
                 });
 

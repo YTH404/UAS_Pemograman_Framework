@@ -7,6 +7,8 @@ return [
     'date' => 'The :attribute must be a valid date.',
     'email' => 'The :attribute must be a valid email address.',
     'max' => [
+        'array' => 'The :attribute must not have more than :max items.',
+        'file' => 'The :attribute must not be greater than :max kilobytes.',
         'string' => 'The :attribute must not be greater than :max characters.',
     ],
     'min' => [
@@ -16,6 +18,8 @@ return [
     'string' => 'The :attribute must be text.',
     'unique' => 'The :attribute has already been taken.',
     'exists' => 'The selected :attribute is invalid.',
+    'array' => 'The :attribute must be a list.',
+    'file' => 'The :attribute must be a file.',
 
     'attributes' => [
         'class_code' => 'class code',
@@ -26,6 +30,8 @@ return [
         'ended_at' => 'close date/time',
         'external_link' => 'external link',
         'file_path' => 'document file',
+        'files' => 'submission files',
+        'files.*' => 'submission file',
         'login' => 'username',
         'material_type' => 'material type',
         'meeting' => 'meeting',
@@ -65,6 +71,13 @@ return [
         ],
         'ended_at' => [
             'after' => 'The close date/time must be after the open date/time.',
+        ],
+        'files' => [
+            'max' => 'You can upload up to 5 files.',
+            'required' => 'Please upload at least one file.',
+        ],
+        'files.*' => [
+            'max' => 'Each submission file must not be greater than 10MB.',
         ],
     ],
 ];

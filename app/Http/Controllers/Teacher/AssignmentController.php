@@ -3,86 +3,84 @@
 namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
-use App\Models\Attendance;
-use App\Models\AttendanceStudent;
+use App\Models\Assignment;
 use App\Models\Course;
 use App\Models\StudentClass;
+use App\Models\Submission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class AttendanceController extends Controller
+class AssignmentController extends Controller
 {
     private const MAX_MEETINGS = 16;
 
     public function store(Request $request, string $course)
     {
-        $course = Course::where('teacher_id', $request->user()->id)->findOrFail($course);
-        $validatedData = $this->validateAttendance($request);
+        $course = $this->findTeacherCourse($request, $course);
+        $validatedData = $this->validateAssignment($request);
         $validatedData['meeting'] = $this->normalizeMeetingTitle($validatedData['meeting']);
 
         if (! $this->canCreateInMeeting($course, $validatedData['meeting'])) {
             return redirect()
                 ->route('teacher.course.show', $course->id)
                 ->withInput()
-                ->with('error', __('sweetalert.flash.attendance.meeting_locked'));
-        }
-
-        if ($course->attendances()->where('meeting', $validatedData['meeting'])->exists()) {
-            return redirect()
-                ->route('teacher.course.show', $course->id)
-                ->withInput()
-                ->with('error', __('sweetalert.flash.attendance.duplicate'));
+                ->with('error', __('sweetalert.flash.assignment.meeting_locked'));
         }
 
         DB::transaction(function () use ($course, $validatedData) {
-            $attendance = $course->attendances()->create($validatedData);
+            $assignment = $course->assignments()->create($validatedData);
             $timestamp = now();
-            $attendanceRows = StudentClass::where('class_id', $course->class_id)
+            $submissionRows = StudentClass::where('class_id', $course->class_id)
                 ->whereHas('student')
                 ->pluck('student_id')
                 ->map(fn ($studentId) => [
-                    'attendance_id' => $attendance->id,
+                    'assignment_id' => $assignment->id,
                     'student_id' => $studentId,
-                    'status' => 'absent',
-                    'filled_at' => null,
+                    'submitted_at' => null,
                     'created_at' => $timestamp,
                     'updated_at' => $timestamp,
                 ])
                 ->all();
 
-            if ($attendanceRows !== []) {
-                AttendanceStudent::insert($attendanceRows);
+            if ($submissionRows !== []) {
+                Submission::insert($submissionRows);
             }
         });
 
-        return redirect()->route('teacher.course.show', $course->id)->with('success', __('sweetalert.flash.attendance.created'));
+        return redirect()->route('teacher.course.show', $course->id)->with('success', __('sweetalert.flash.assignment.created'));
     }
 
-    public function update(Request $request, string $course, string $attendance)
+    public function update(Request $request, string $course, string $assignment)
     {
-        $course = Course::where('teacher_id', $request->user()->id)->findOrFail($course);
-        $attendance = $this->findAttendanceForCourse($course, $attendance);
-        $validatedData = $this->validateAttendance($request);
+        $course = $this->findTeacherCourse($request, $course);
+        $assignment = $this->findAssignmentForCourse($course, $assignment);
+        $validatedData = $this->validateAssignment($request);
         unset($validatedData['meeting']);
 
-        $attendance->update($validatedData);
+        $assignment->update($validatedData);
 
-        return redirect()->route('teacher.course.show', $course->id)->with('success', __('sweetalert.flash.attendance.updated'));
+        return redirect()->route('teacher.course.show', $course->id)->with('success', __('sweetalert.flash.assignment.updated'));
     }
 
-    private function validateAttendance(Request $request): array
+    private function validateAssignment(Request $request): array
     {
         return $request->validate([
             'meeting' => 'required|string|max:255',
             'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
             'started_at' => 'required|date',
             'ended_at' => 'required|date|after:started_at',
         ]);
     }
 
-    private function findAttendanceForCourse(Course $course, string $attendance): Attendance
+    private function findTeacherCourse(Request $request, string $course): Course
     {
-        return $course->attendances()->findOrFail($attendance);
+        return Course::where('teacher_id', $request->user()->id)->findOrFail($course);
+    }
+
+    private function findAssignmentForCourse(Course $course, string $assignment): Assignment
+    {
+        return $course->assignments()->findOrFail($assignment);
     }
 
     private function canCreateInMeeting(Course $course, string $meeting): bool

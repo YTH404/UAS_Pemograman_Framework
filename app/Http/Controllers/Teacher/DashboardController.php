@@ -13,7 +13,7 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $teacher = $request->user();
-        $assignedCourses = Course::with('classes.studentClasses')
+        $assignedCourses = Course::with(['classes.studentClasses', 'assignments.submissions'])
             ->where('teacher_id', $teacher->id)
             ->get();
 
@@ -24,8 +24,8 @@ class DashboardController extends Controller
                 'class_code' => $course->classes?->class_code,
                 'class_name' => $course->classes?->class_name ?? 'No class assigned',
                 'student_enrolled' => $course->classes?->studentClasses->count() ?? 0,
-                'pending_submissions' => 0,
-                'submitted_submissions' => 0,
+                'pending_submissions' => $course->assignments->sum(fn ($assignment) => $assignment->submissions->filter(fn ($submission) => $submission->submitted_at === null)->count()),
+                'submitted_submissions' => $course->assignments->sum(fn ($assignment) => $assignment->submissions->filter(fn ($submission) => $submission->submitted_at !== null)->count()),
             ])
             ->values()
             ->all();
@@ -42,7 +42,7 @@ class DashboardController extends Controller
     public function showCourse(Request $request, string $course)
     {
         $teacher = $request->user();
-        $course = Course::with(['classes', 'learningMaterials', 'attendances.attendanceStudents'])
+        $course = Course::with(['classes', 'learningMaterials', 'attendances.attendanceStudents', 'assignments.submissions.files'])
             ->where('teacher_id', $teacher->id)
             ->findOrFail($course);
         $meetings = $this->buildMeetings($course);
@@ -58,7 +58,10 @@ class DashboardController extends Controller
         $attendancesByMeeting = $course->attendances->groupBy(
             fn ($attendance) => $this->normalizeMeetingTitle($attendance->meeting)
         );
-        $meetingsWithContent = collect([...$materialsByMeeting->keys(), ...$attendancesByMeeting->keys()])
+        $assignmentsByMeeting = $course->assignments->groupBy(
+            fn ($assignment) => $this->normalizeMeetingTitle($assignment->meeting)
+        );
+        $meetingsWithContent = collect([...$materialsByMeeting->keys(), ...$attendancesByMeeting->keys(), ...$assignmentsByMeeting->keys()])
             ->map(fn ($meeting) => $this->meetingNumber($meeting))
             ->filter()
             ->unique()
@@ -78,6 +81,7 @@ class DashboardController extends Controller
                 'items' => $this->placeholderItems($meeting),
                 'materials' => $materialsByMeeting->get('Pertemuan ' . $meeting, collect())->values(),
                 'attendances' => $this->attendanceCards($attendancesByMeeting->get('Pertemuan ' . $meeting, collect()), $course->id),
+                'assignments' => $this->assignmentCards($assignmentsByMeeting->get('Pertemuan ' . $meeting, collect()), $course->id),
                 'can_add' => in_array($meeting, $unlockedMeetings, true),
             ])
             ->all();
@@ -115,9 +119,7 @@ class DashboardController extends Controller
 
     private function placeholderItems(int $meeting): array
     {
-        return [
-            ['title' => $meeting === 1 ? 'Pengumpulan soal' : 'Pengumpulan project', 'type' => 'Submission'],
-        ];
+        return [];
     }
 
     private function attendanceCards($attendances, int $courseId)
@@ -131,6 +133,22 @@ class DashboardController extends Controller
                 'update_url' => route('teacher.course.attendances.update', [$courseId, $attendance->id]),
                 'filled_count' => $attendance->attendanceStudents->filter(fn ($attendanceStudent) => $attendanceStudent->filled_at !== null)->count(),
                 'total_count' => $attendance->attendanceStudents->count(),
+            ])
+            ->values();
+    }
+
+    private function assignmentCards($assignments, int $courseId)
+    {
+        return $assignments
+            ->map(fn ($assignment) => [
+                'id' => $assignment->id,
+                'title' => $assignment->title,
+                'description' => $assignment->description,
+                'started_at' => $assignment->started_at,
+                'ended_at' => $assignment->ended_at,
+                'update_url' => route('teacher.course.assignments.update', [$courseId, $assignment->id]),
+                'submitted_count' => $assignment->submissions->filter(fn ($submission) => $submission->submitted_at !== null)->count(),
+                'total_count' => $assignment->submissions->count(),
             ])
             ->values();
     }

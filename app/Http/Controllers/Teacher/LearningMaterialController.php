@@ -136,6 +136,7 @@ class LearningMaterialController extends Controller
         $meetingsWithContent = $course->learningMaterials()
             ->pluck('meeting')
             ->merge($course->attendances()->pluck('meeting'))
+            ->merge($course->assignments()->pluck('meeting'))
             ->map(fn ($meeting) => $this->meetingNumber($meeting))
             ->filter()
             ->unique()
