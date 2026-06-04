@@ -20,7 +20,12 @@ return [
         'class_id' => 'class',
         'class_name' => 'class name',
         'course_name' => 'course name',
+        'description' => 'description',
+        'external_link' => 'external link',
+        'file_path' => 'document file',
         'login' => 'username',
+        'material_type' => 'material type',
+        'meeting' => 'meeting',
         'name' => 'name',
         'password' => 'password',
         'password_confirmation' => 'password confirmation',
@@ -42,6 +47,13 @@ return [
         'teacher_id' => [
             'required' => 'Please choose a teacher.',
             'exists' => 'The selected teacher does not exist.',
+        ],
+        'file_path' => [
+            'required' => 'Please upload a document file.',
+        ],
+        'external_link' => [
+            'required' => 'Please provide an external link.',
+            'url' => 'The external link must be a valid URL.',
         ],
         'password' => [
             'confirmed' => 'The password confirmation does not match.',

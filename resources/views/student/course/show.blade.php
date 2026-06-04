@@ -72,6 +72,37 @@
                                         </div>
                                     </div>
                                 @endforeach
+
+                                @foreach ($meeting['materials'] as $material)
+                                    <div class="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm">
+                                        <div class="space-y-4">
+                                            <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                                                <div>
+                                                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Materials · {{ ucfirst($material->material_type) }}</p>
+                                                    @if ($material->material_type === 'document')
+                                                        <a href="{{ $material->fileUrl() }}" target="_blank" class="mt-2 inline-flex text-lg font-semibold text-slate-950 transition hover:text-sky-700">{{ $material->title }}</a>
+                                                    @elseif ($material->external_link)
+                                                        <a href="{{ $material->external_link }}" target="_blank" class="mt-2 inline-flex text-lg font-semibold text-slate-950 transition hover:text-sky-700">{{ $material->title }}</a>
+                                                    @else
+                                                        <span class="mt-2 inline-flex text-lg font-semibold text-slate-950">{{ $material->title }}</span>
+                                                    @endif
+
+                                                    @if ($material->description)
+                                                        <p class="mt-2 text-sm leading-6 text-slate-600">{{ $material->description }}</p>
+                                                    @endif
+                                                </div>
+
+                                                <button type="button" class="inline-flex w-fit items-center rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-sky-300 hover:bg-sky-50 hover:text-sky-700">Mark as Done</button>
+                                            </div>
+
+                                            @if ($material->youtubeEmbedUrl())
+                                                <div class="aspect-video overflow-hidden rounded-2xl border border-slate-200 bg-slate-950">
+                                                    <iframe src="{{ $material->youtubeEmbedUrl() }}" title="{{ $material->title }}" class="h-full w-full" allowfullscreen></iframe>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
                             </div>
                         </article>
                     @endforeach

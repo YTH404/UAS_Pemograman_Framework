@@ -33,40 +33,56 @@ class DashboardController extends Controller
     {
         $student = Student::with('studentClass.class')->findOrFail($request->user()->id);
         $class = $student->studentClass?->class;
-        $course = Course::with(['classes', 'teacher'])
+        $course = Course::with(['classes', 'teacher', 'learningMaterials'])
             ->where('class_id', $class?->id)
             ->findOrFail($course);
-        $meetings = $this->placeholderMeetings();
+        $meetings = $this->buildMeetings($course);
 
         return view('student.course.show', compact('student', 'class', 'course', 'meetings'));
     }
 
-    private function placeholderMeetings(): array
+    private function buildMeetings(Course $course): array
     {
-        return [
-            [
+        $meetings = [
+            'Pertemuan 1' => [
                 'title' => 'Pertemuan 1',
                 'items' => [
                     ['title' => 'Daftar hadir pertemuan 1', 'type' => 'Attendance', 'done' => true],
-                    ['title' => 'Materi 1', 'type' => 'Materials', 'done' => true],
                     ['title' => 'Pengumpulan soal', 'type' => 'Submission', 'done' => false],
                 ],
+                'materials' => [],
             ],
-            [
+            'Pertemuan 2' => [
                 'title' => 'Pertemuan 2',
                 'items' => [
                     ['title' => 'Daftar hadir pertemuan 2', 'type' => 'Attendance', 'done' => false],
-                    ['title' => 'Materi 2', 'type' => 'Materials', 'done' => false],
                     ['title' => 'Pengumpulan project', 'type' => 'Submission', 'done' => false],
                 ],
+                'materials' => [],
             ],
-            [
+            'Pertemuan 3' => [
                 'title' => 'Pertemuan 3',
                 'items' => [
                     ['title' => 'Daftar hadir pertemuan 3', 'type' => 'Attendance', 'done' => false],
-                    ['title' => 'Materi 3', 'type' => 'Materials', 'done' => false],
                 ],
+                'materials' => [],
             ],
         ];
+
+        foreach ($course->learningMaterials as $material) {
+            $meeting = $material->meeting ?: 'Pertemuan 1';
+
+            if (! isset($meetings[$meeting])) {
+                $meetings[$meeting] = [
+                    'title' => $meeting,
+                    'items' => [],
+                    'materials' => [],
+                ];
+            }
+
+            $meetings[$meeting]['materials'][] = $material;
+        }
+
+        return array_values($meetings);
     }
 }

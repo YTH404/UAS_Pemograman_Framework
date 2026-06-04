@@ -73,5 +73,11 @@ return [
             'updated' => 'Course has been updated.',
             'deleted' => 'Course has been deleted.',
         ],
+
+        'material' => [
+            'created' => 'Learning material has been created.',
+            'updated' => 'Learning material has been updated.',
+            'deleted' => 'Learning material has been deleted.',
+        ],
     ],
 ];

@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
 use App\Http\Controllers\Teacher\DashboardController as TeacherDashboardController;
+use App\Http\Controllers\Teacher\LearningMaterialController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -28,6 +29,9 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['role:teacher'])->group(function () {
         Route::get('/dashboard-teacher', [TeacherDashboardController::class, 'index'])->name('teacher.dashboard');
         Route::get('/dashboard-teacher/course/{course}', [TeacherDashboardController::class, 'showCourse'])->name('teacher.course.show');
+        Route::post('/dashboard-teacher/course/{course}/materials', [LearningMaterialController::class, 'store'])->name('teacher.course.materials.store');
+        Route::put('/dashboard-teacher/course/{course}/materials/{material}', [LearningMaterialController::class, 'update'])->name('teacher.course.materials.update');
+        Route::delete('/dashboard-teacher/course/{course}/materials/{material}', [LearningMaterialController::class, 'destroy'])->name('teacher.course.materials.destroy');
     });
 
     Route::prefix('admin')->middleware(['role:admin'])->name('admin.')->group(function () {
