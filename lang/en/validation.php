@@ -2,7 +2,9 @@
 
 return [
     'accepted' => 'The :attribute must be accepted.',
+    'after' => 'The :attribute must be after :date.',
     'confirmed' => 'The :attribute confirmation does not match.',
+    'date' => 'The :attribute must be a valid date.',
     'email' => 'The :attribute must be a valid email address.',
     'max' => [
         'string' => 'The :attribute must not be greater than :max characters.',
@@ -21,6 +23,7 @@ return [
         'class_name' => 'class name',
         'course_name' => 'course name',
         'description' => 'description',
+        'ended_at' => 'close date/time',
         'external_link' => 'external link',
         'file_path' => 'document file',
         'login' => 'username',
@@ -29,7 +32,9 @@ return [
         'name' => 'name',
         'password' => 'password',
         'password_confirmation' => 'password confirmation',
+        'started_at' => 'open date/time',
         'teacher_id' => 'teacher',
+        'title' => 'title',
         'username' => 'username',
     ],
 
@@ -57,6 +62,9 @@ return [
         ],
         'password' => [
             'confirmed' => 'The password confirmation does not match.',
+        ],
+        'ended_at' => [
+            'after' => 'The close date/time must be after the open date/time.',
         ],
     ],
 ];

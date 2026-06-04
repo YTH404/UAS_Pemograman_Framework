@@ -73,6 +73,48 @@
                                     </div>
                                 @endforeach
 
+                                @foreach ($meeting['attendances'] as $attendance)
+                                    @php
+                                        $statusClass = match ($attendance['status']['variant']) {
+                                            'success' => 'bg-emerald-100 text-emerald-700',
+                                            'danger' => 'bg-rose-100 text-rose-700',
+                                            'action' => 'border border-sky-300 bg-white text-sky-700 hover:bg-sky-50',
+                                            default => 'bg-slate-100 text-slate-600',
+                                        };
+                                    @endphp
+
+                                    <div class="rounded-[1.5rem] border border-emerald-200 bg-emerald-50/70 p-5 shadow-sm">
+                                        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                                            <div>
+                                                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">Attendance</p>
+                                                <h3 class="mt-2 text-lg font-semibold text-slate-950">{{ $attendance['title'] }}</h3>
+                                                <p class="mt-2 text-sm leading-6 text-slate-600">
+                                                    Open: {{ $attendance['started_at']?->format('d M Y H:i') ?? '-' }} ·
+                                                    Close: {{ $attendance['ended_at']?->format('d M Y H:i') ?? '-' }}
+                                                </p>
+                                            </div>
+
+                                            @if ($attendance['status']['can_fill'])
+                                                <button
+                                                    type="button"
+                                                    data-open-attendance-modal
+                                                    data-action="{{ $attendance['fill_url'] }}"
+                                                    data-title="{{ $attendance['title'] }}"
+                                                    data-started-at="{{ $attendance['started_at']?->format('d M Y H:i') ?? '-' }}"
+                                                    data-ended-at="{{ $attendance['ended_at']?->format('d M Y H:i') ?? '-' }}"
+                                                    class="inline-flex w-fit items-center rounded-full px-4 py-2 text-sm font-semibold transition {{ $statusClass }}"
+                                                >
+                                                    {{ $attendance['status']['label'] }}
+                                                </button>
+                                            @else
+                                                <span class="inline-flex w-fit items-center rounded-full px-4 py-2 text-sm font-semibold {{ $statusClass }}">
+                                                    {{ $attendance['status']['label'] }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
+
                                 @foreach ($meeting['materials'] as $material)
                                     <div class="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm">
                                         <div class="space-y-4">
@@ -109,5 +151,74 @@
                 </section>
             </main>
         </div>
+
+        <div class="fixed inset-0 z-50 hidden items-center justify-center overflow-y-auto overflow-x-clip bg-slate-950/60 px-4 py-8" data-attendance-modal>
+            <div class="w-full max-w-[calc(100vw-2rem)] rounded-[2rem] bg-white shadow-2xl shadow-slate-950/30 sm:max-w-lg">
+                <div class="flex items-start justify-between gap-4 border-b border-slate-200 px-6 py-5">
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-700">Attendance</p>
+                        <h2 class="mt-2 text-2xl font-semibold tracking-tight text-slate-950" data-attendance-title>Fill attendance</h2>
+                    </div>
+                    <button type="button" data-close-attendance-modal class="rounded-full border border-slate-200 px-3 py-1 text-sm font-semibold text-slate-600 transition hover:bg-slate-100">Close</button>
+                </div>
+
+                <form method="POST" action="#" class="space-y-5 px-6 py-6" data-attendance-form>
+                    @csrf
+                    <div class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm leading-6 text-emerald-800">
+                        Confirming this form will mark your attendance as present. You can only fill this attendance once.
+                    </div>
+
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+                        <p><span class="font-semibold text-slate-800">Open:</span> <span data-attendance-started-at>-</span></p>
+                        <p><span class="font-semibold text-slate-800">Close:</span> <span data-attendance-ended-at>-</span></p>
+                    </div>
+
+                    <div class="flex justify-end gap-3">
+                        <button type="button" data-close-attendance-modal class="rounded-2xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">Cancel</button>
+                        <button type="submit" class="rounded-2xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:-translate-y-0.5 hover:bg-slate-800">Confirm Attendance</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const modal = document.querySelector('[data-attendance-modal]');
+                const form = document.querySelector('[data-attendance-form]');
+                const title = document.querySelector('[data-attendance-title]');
+                const startedAt = document.querySelector('[data-attendance-started-at]');
+                const endedAt = document.querySelector('[data-attendance-ended-at]');
+
+                if (!modal || !form || !title || !startedAt || !endedAt) {
+                    return;
+                }
+
+                const openModal = () => {
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+                    document.body.classList.add('overflow-hidden');
+                };
+
+                const closeModal = () => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                    document.body.classList.remove('overflow-hidden');
+                };
+
+                document.querySelectorAll('[data-open-attendance-modal]').forEach((button) => {
+                    button.addEventListener('click', () => {
+                        form.action = button.dataset.action;
+                        title.textContent = button.dataset.title || 'Fill attendance';
+                        startedAt.textContent = button.dataset.startedAt || '-';
+                        endedAt.textContent = button.dataset.endedAt || '-';
+                        openModal();
+                    });
+                });
+
+                document.querySelectorAll('[data-close-attendance-modal]').forEach((button) => {
+                    button.addEventListener('click', closeModal);
+                });
+            });
+        </script>
     </body>
 </html>

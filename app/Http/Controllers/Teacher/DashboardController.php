@@ -42,7 +42,7 @@ class DashboardController extends Controller
     public function showCourse(Request $request, string $course)
     {
         $teacher = $request->user();
-        $course = Course::with(['classes', 'learningMaterials'])
+        $course = Course::with(['classes', 'learningMaterials', 'attendances.attendanceStudents'])
             ->where('teacher_id', $teacher->id)
             ->findOrFail($course);
         $meetings = $this->buildMeetings($course);
@@ -55,8 +55,10 @@ class DashboardController extends Controller
         $materialsByMeeting = $course->learningMaterials->groupBy(
             fn ($material) => $this->normalizeMeetingTitle($material->meeting)
         );
-        $meetingsWithContent = $materialsByMeeting
-            ->keys()
+        $attendancesByMeeting = $course->attendances->groupBy(
+            fn ($attendance) => $this->normalizeMeetingTitle($attendance->meeting)
+        );
+        $meetingsWithContent = collect([...$materialsByMeeting->keys(), ...$attendancesByMeeting->keys()])
             ->map(fn ($meeting) => $this->meetingNumber($meeting))
             ->filter()
             ->unique()
@@ -75,6 +77,7 @@ class DashboardController extends Controller
                 'title' => 'Pertemuan ' . $meeting,
                 'items' => $this->placeholderItems($meeting),
                 'materials' => $materialsByMeeting->get('Pertemuan ' . $meeting, collect())->values(),
+                'attendances' => $this->attendanceCards($attendancesByMeeting->get('Pertemuan ' . $meeting, collect()), $course->id),
                 'can_add' => in_array($meeting, $unlockedMeetings, true),
             ])
             ->all();
@@ -113,8 +116,22 @@ class DashboardController extends Controller
     private function placeholderItems(int $meeting): array
     {
         return [
-            ['title' => 'Daftar hadir pertemuan ' . $meeting, 'type' => 'Attendance'],
             ['title' => $meeting === 1 ? 'Pengumpulan soal' : 'Pengumpulan project', 'type' => 'Submission'],
         ];
+    }
+
+    private function attendanceCards($attendances, int $courseId)
+    {
+        return $attendances
+            ->map(fn ($attendance) => [
+                'id' => $attendance->id,
+                'title' => $attendance->title,
+                'started_at' => $attendance->started_at,
+                'ended_at' => $attendance->ended_at,
+                'update_url' => route('teacher.course.attendances.update', [$courseId, $attendance->id]),
+                'filled_count' => $attendance->attendanceStudents->filter(fn ($attendanceStudent) => $attendanceStudent->filled_at !== null)->count(),
+                'total_count' => $attendance->attendanceStudents->count(),
+            ])
+            ->values();
     }
 }

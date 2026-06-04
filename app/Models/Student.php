@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -59,6 +60,11 @@ class Student extends Model
     public function studentClass(): HasOne
     {
         return $this->hasOne(StudentClass::class, 'student_id');
+    }
+
+    public function attendanceStudents(): HasMany
+    {
+        return $this->hasMany(AttendanceStudent::class, 'student_id');
     }
 
     protected function casts(): array

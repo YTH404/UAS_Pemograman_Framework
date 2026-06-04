@@ -35,7 +35,12 @@ class DashboardController extends Controller
     {
         $student = Student::with('studentClass.class')->findOrFail($request->user()->id);
         $class = $student->studentClass?->class;
-        $course = Course::with(['classes', 'teacher', 'learningMaterials'])
+        $course = Course::with([
+                'classes',
+                'teacher',
+                'learningMaterials',
+                'attendances.attendanceStudents' => fn ($query) => $query->where('student_id', $student->id),
+            ])
             ->where('class_id', $class?->id)
             ->findOrFail($course);
         $meetings = $this->buildMeetings($course);
@@ -48,8 +53,10 @@ class DashboardController extends Controller
         $materialsByMeeting = $course->learningMaterials->groupBy(
             fn ($material) => $this->normalizeMeetingTitle($material->meeting)
         );
-        $meetingsWithContent = $materialsByMeeting
-            ->keys()
+        $attendancesByMeeting = $course->attendances->groupBy(
+            fn ($attendance) => $this->normalizeMeetingTitle($attendance->meeting)
+        );
+        $meetingsWithContent = collect([...$materialsByMeeting->keys(), ...$attendancesByMeeting->keys()])
             ->map(fn ($meeting) => $this->meetingNumber($meeting))
             ->filter()
             ->unique()
@@ -67,6 +74,7 @@ class DashboardController extends Controller
                 'title' => 'Pertemuan ' . $meeting,
                 'items' => $this->placeholderItems($meeting),
                 'materials' => $materialsByMeeting->get('Pertemuan ' . $meeting, collect())->values(),
+                'attendances' => $this->attendanceCards($attendancesByMeeting->get('Pertemuan ' . $meeting, collect()), $course->id),
             ])
             ->all();
     }
@@ -104,8 +112,59 @@ class DashboardController extends Controller
     private function placeholderItems(int $meeting): array
     {
         return [
-            ['title' => 'Daftar hadir pertemuan ' . $meeting, 'type' => 'Attendance', 'done' => $meeting === 1],
             ['title' => $meeting === 1 ? 'Pengumpulan soal' : 'Pengumpulan project', 'type' => 'Submission', 'done' => false],
+        ];
+    }
+
+    private function attendanceCards($attendances, int $courseId)
+    {
+        return $attendances
+            ->map(function ($attendance) use ($courseId) {
+                $attendanceStudent = $attendance->attendanceStudents->first();
+                $status = $this->attendanceStatus($attendance, $attendanceStudent);
+
+                return [
+                    'id' => $attendance->id,
+                    'title' => $attendance->title,
+                    'started_at' => $attendance->started_at,
+                    'ended_at' => $attendance->ended_at,
+                    'status' => $status,
+                    'fill_url' => route('student.course.attendances.fill', [$courseId, $attendance->id]),
+                ];
+            })
+            ->values();
+    }
+
+    private function attendanceStatus($attendance, $attendanceStudent): array
+    {
+        if ($attendanceStudent?->filled_at !== null) {
+            return [
+                'label' => '✓ Present',
+                'variant' => 'success',
+                'can_fill' => false,
+            ];
+        }
+
+        if (! $attendance->hasStarted()) {
+            return [
+                'label' => 'Not opened',
+                'variant' => 'muted',
+                'can_fill' => false,
+            ];
+        }
+
+        if ($attendance->hasEnded()) {
+            return [
+                'label' => 'Absent',
+                'variant' => 'danger',
+                'can_fill' => false,
+            ];
+        }
+
+        return [
+            'label' => 'Fill Attendance',
+            'variant' => 'action',
+            'can_fill' => true,
         ];
     }
 }

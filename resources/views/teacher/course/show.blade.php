@@ -70,6 +70,39 @@
                                     </div>
                                 @endforeach
 
+                                @foreach ($meeting['attendances'] as $attendance)
+                                    <div class="rounded-[1.5rem] border border-emerald-200 bg-emerald-50/70 p-5 shadow-sm">
+                                        <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                                            <div>
+                                                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">Attendance</p>
+                                                <h3 class="mt-2 text-lg font-semibold text-slate-950">{{ $attendance['title'] }}</h3>
+                                                <p class="mt-2 text-sm leading-6 text-slate-600">
+                                                    Open: {{ $attendance['started_at']?->format('d M Y H:i') ?? '-' }} ·
+                                                    Close: {{ $attendance['ended_at']?->format('d M Y H:i') ?? '-' }}
+                                                </p>
+                                            </div>
+
+                                            <div class="flex flex-wrap items-center gap-2">
+                                                <span class="inline-flex w-fit items-center rounded-full bg-white px-4 py-2 text-sm font-semibold text-emerald-700 shadow-sm">
+                                                    {{ $attendance['filled_count'] }}/{{ $attendance['total_count'] }} filled
+                                                </span>
+                                                <button
+                                                    type="button"
+                                                    data-edit-attendance-modal
+                                                    data-action="{{ $attendance['update_url'] }}"
+                                                    data-meeting="{{ $meeting['title'] }}"
+                                                    data-title="{{ $attendance['title'] }}"
+                                                    data-started-at="{{ $attendance['started_at']?->format('Y-m-d\TH:i') }}"
+                                                    data-ended-at="{{ $attendance['ended_at']?->format('Y-m-d\TH:i') }}"
+                                                    class="rounded-full bg-white px-4 py-2 text-sm font-semibold text-sky-700 shadow-sm transition hover:bg-sky-50"
+                                                >
+                                                    Edit
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+
                                 @foreach ($meeting['materials'] as $material)
                                     <div class="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm">
                                         <div class="space-y-4">
@@ -131,7 +164,7 @@
                 <div class="flex items-start justify-between gap-4 border-b border-slate-200 px-6 py-5">
                     <div>
                         <p class="text-xs font-semibold uppercase tracking-[0.22em] text-sky-700" data-modal-meeting-label>Pertemuan</p>
-                        <h2 class="mt-2 text-2xl font-semibold tracking-tight text-slate-950">Add course activity</h2>
+                        <h2 class="mt-2 text-2xl font-semibold tracking-tight text-slate-950" data-modal-title>Add course activity</h2>
                     </div>
                     <button type="button" data-close-activity-modal class="rounded-full border border-slate-200 px-3 py-1 text-sm font-semibold text-slate-600 transition hover:bg-slate-100">Close</button>
                 </div>
@@ -174,9 +207,11 @@
                 const submit = document.querySelector('[data-activity-submit]');
                 const meetingInput = document.querySelector('[data-meeting-input]');
                 const meetingLabel = document.querySelector('[data-modal-meeting-label]');
+                const modalTitle = document.querySelector('[data-modal-title]');
 
                 let mode = 'create';
                 let currentMaterial = {};
+                let currentAttendance = {};
 
                 const escapeHtml = (value = '') =>
                     String(value)
@@ -254,6 +289,23 @@
                     `;
                 };
 
+                const attendanceFields = () => `
+                    <label class="block">
+                        <span class="mb-2 block text-sm font-medium text-slate-700">Title</span>
+                        <input type="text" name="title" value="${escapeHtml(currentAttendance.title)}" placeholder="Daftar hadir pertemuan" required class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:bg-white">
+                    </label>
+                    <div class="grid gap-5 md:grid-cols-2">
+                        <label class="block">
+                            <span class="mb-2 block text-sm font-medium text-slate-700">Open date/time</span>
+                            <input type="datetime-local" name="started_at" value="${escapeHtml(currentAttendance.startedAt)}" required class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:bg-white">
+                        </label>
+                        <label class="block">
+                            <span class="mb-2 block text-sm font-medium text-slate-700">Close date/time</span>
+                            <input type="datetime-local" name="ended_at" value="${escapeHtml(currentAttendance.endedAt)}" required class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:bg-white">
+                        </label>
+                    </div>
+                `;
+
                 const configs = {
                     submission: {
                         action: @json(url('/dashboard-teacher/course/' . $course->id . '/submissions')),
@@ -281,29 +333,10 @@
                         `,
                     },
                     attendance: {
-                        action: @json(url('/dashboard-teacher/course/' . $course->id . '/attendance')),
-                        help: 'Create an attendance window for a meeting. This is only the UI placeholder for now.',
+                        action: @json(route('teacher.course.attendances.store', $course->id)),
+                        help: 'Create one attendance window for this meeting. Every student in this class will receive an attendance row automatically.',
                         submit: 'Create Attendance',
-                        fields: `
-                            <label class="block">
-                                <span class="mb-2 block text-sm font-medium text-slate-700">Title</span>
-                                <input type="text" name="title" placeholder="Daftar hadir pertemuan" class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:bg-white">
-                            </label>
-                            <div class="grid gap-5 md:grid-cols-2">
-                                <label class="block">
-                                    <span class="mb-2 block text-sm font-medium text-slate-700">Open date/time</span>
-                                    <input type="datetime-local" name="open_at" class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:bg-white">
-                                </label>
-                                <label class="block">
-                                    <span class="mb-2 block text-sm font-medium text-slate-700">Close date/time</span>
-                                    <input type="datetime-local" name="close_at" class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:bg-white">
-                                </label>
-                            </div>
-                            <label class="block">
-                                <span class="mb-2 block text-sm font-medium text-slate-700">Description</span>
-                                <textarea name="description" rows="3" class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:bg-white"></textarea>
-                            </label>
-                        `,
+                        fields: attendanceFields,
                     },
                     materials: {
                         action: @json(route('teacher.course.materials.store', $course->id)),
@@ -315,12 +348,17 @@
 
                 const setType = () => {
                     const config = configs[typeSelect.value];
-                    form.action = mode === 'edit' && typeSelect.value === 'materials' ? currentMaterial.action : config.action;
-                    setMethod(mode === 'edit' && typeSelect.value === 'materials' ? 'PUT' : null);
-                    help.textContent = mode === 'edit' && typeSelect.value === 'materials'
+                    const isMaterialEdit = mode === 'edit' && typeSelect.value === 'materials';
+                    const isAttendanceEdit = mode === 'edit' && typeSelect.value === 'attendance';
+                    form.action = isMaterialEdit ? currentMaterial.action : isAttendanceEdit ? currentAttendance.action : config.action;
+                    setMethod(isMaterialEdit || isAttendanceEdit ? 'PUT' : null);
+                    help.textContent = isMaterialEdit
                         ? 'Update this learning material. Upload a document only if you want to replace the current file.'
-                        : config.help;
-                    submit.textContent = mode === 'edit' && typeSelect.value === 'materials' ? 'Update Material' : config.submit;
+                        : isAttendanceEdit
+                            ? 'Update this attendance window. Students who already filled it will keep their submitted status.'
+                            : config.help;
+                    submit.textContent = isMaterialEdit ? 'Update Material' : isAttendanceEdit ? 'Update Attendance' : config.submit;
+                    modalTitle.textContent = isMaterialEdit ? 'Edit material' : isAttendanceEdit ? 'Edit attendance' : 'Add course activity';
                     fields.innerHTML = typeof config.fields === 'function' ? config.fields() : config.fields;
                     bindMaterialTypeSelect();
                 };
@@ -341,6 +379,7 @@
                     button.addEventListener('click', () => {
                         mode = 'create';
                         currentMaterial = {};
+                        currentAttendance = {};
                         form.reset();
                         typeWrapper.classList.remove('hidden');
                         typeSelect.value = 'submission';
@@ -351,9 +390,30 @@
                     });
                 });
 
+                document.querySelectorAll('[data-edit-attendance-modal]').forEach((button) => {
+                    button.addEventListener('click', () => {
+                        mode = 'edit';
+                        currentMaterial = {};
+                        currentAttendance = {
+                            action: button.dataset.action,
+                            title: button.dataset.title || '',
+                            startedAt: button.dataset.startedAt || '',
+                            endedAt: button.dataset.endedAt || '',
+                        };
+                        form.reset();
+                        typeWrapper.classList.add('hidden');
+                        typeSelect.value = 'attendance';
+                        meetingInput.value = button.dataset.meeting;
+                        meetingLabel.textContent = button.dataset.meeting;
+                        setType();
+                        openModal();
+                    });
+                });
+
                 document.querySelectorAll('[data-edit-material-modal]').forEach((button) => {
                     button.addEventListener('click', () => {
                         mode = 'edit';
+                        currentAttendance = {};
                         currentMaterial = {
                             action: button.dataset.action,
                             title: button.dataset.title || '',
@@ -377,6 +437,7 @@
 
                 typeSelect.addEventListener('change', () => {
                     currentMaterial = {};
+                    currentAttendance = {};
                     setType();
                 });
 

@@ -80,5 +80,16 @@ return [
             'deleted' => 'Learning material has been deleted.',
             'meeting_locked' => 'This meeting is still locked. Add content to the previous meeting first.',
         ],
+
+        'attendance' => [
+            'created' => 'Attendance has been created.',
+            'updated' => 'Attendance has been updated.',
+            'filled' => 'Your attendance has been submitted.',
+            'meeting_locked' => 'This meeting is still locked. Add content to the previous meeting first.',
+            'duplicate' => 'Attendance already exists for this meeting.',
+            'not_open' => 'This attendance is not open yet.',
+            'closed' => 'This attendance has already closed.',
+            'already_filled' => 'You have already filled this attendance.',
+        ],
     ],
 ];

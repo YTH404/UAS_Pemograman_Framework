@@ -6,7 +6,9 @@ use App\Http\Controllers\Admin\ClassController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\TeacherController;
+use App\Http\Controllers\Student\AttendanceController as StudentAttendanceController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
+use App\Http\Controllers\Teacher\AttendanceController as TeacherAttendanceController;
 use App\Http\Controllers\Teacher\DashboardController as TeacherDashboardController;
 use App\Http\Controllers\Teacher\LearningMaterialController;
 use Illuminate\Support\Facades\Route;
@@ -24,11 +26,14 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['role:student'])->group(function () {
         Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('dashboard');
         Route::get('/dashboard/course/{course}', [StudentDashboardController::class, 'showCourse'])->name('student.course.show');
+        Route::post('/dashboard/course/{course}/attendances/{attendance}', [StudentAttendanceController::class, 'fill'])->name('student.course.attendances.fill');
     });
 
     Route::middleware(['role:teacher'])->group(function () {
         Route::get('/dashboard-teacher', [TeacherDashboardController::class, 'index'])->name('teacher.dashboard');
         Route::get('/dashboard-teacher/course/{course}', [TeacherDashboardController::class, 'showCourse'])->name('teacher.course.show');
+        Route::post('/dashboard-teacher/course/{course}/attendances', [TeacherAttendanceController::class, 'store'])->name('teacher.course.attendances.store');
+        Route::put('/dashboard-teacher/course/{course}/attendances/{attendance}', [TeacherAttendanceController::class, 'update'])->name('teacher.course.attendances.update');
         Route::post('/dashboard-teacher/course/{course}/materials', [LearningMaterialController::class, 'store'])->name('teacher.course.materials.store');
         Route::put('/dashboard-teacher/course/{course}/materials/{material}', [LearningMaterialController::class, 'update'])->name('teacher.course.materials.update');
         Route::delete('/dashboard-teacher/course/{course}/materials/{material}', [LearningMaterialController::class, 'destroy'])->name('teacher.course.materials.destroy');
