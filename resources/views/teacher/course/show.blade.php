@@ -53,7 +53,11 @@
                                 <div class="h-px flex-1 bg-gradient-to-r from-transparent via-slate-300 to-slate-300"></div>
                                 <div class="text-center">
                                     <h2 class="text-xl font-semibold tracking-tight text-slate-950">{{ $meeting['title'] }}</h2>
-                                    <button type="button" data-open-activity-modal data-meeting="{{ $meeting['title'] }}" class="mt-3 rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:-translate-y-0.5 hover:bg-slate-800">Add</button>
+                                    @if ($meeting['can_add'])
+                                        <button type="button" data-open-activity-modal data-meeting="{{ $meeting['title'] }}" class="mt-3 rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:-translate-y-0.5 hover:bg-slate-800">Add</button>
+                                    @else
+                                        <span class="mt-3 inline-flex rounded-full border border-slate-200 bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-500">Locked</span>
+                                    @endif
                                 </div>
                                 <div class="h-px flex-1 bg-gradient-to-l from-transparent via-slate-300 to-slate-300"></div>
                             </div>

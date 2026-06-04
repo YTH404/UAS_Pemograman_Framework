@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
+    private const MAX_MEETINGS = 16;
+
     public function index(Request $request)
     {
         $student = Student::with('studentClass.class.courses.teacher')->find($request->user()->id);
@@ -43,46 +45,67 @@ class DashboardController extends Controller
 
     private function buildMeetings(Course $course): array
     {
-        $meetings = [
-            'Pertemuan 1' => [
-                'title' => 'Pertemuan 1',
-                'items' => [
-                    ['title' => 'Daftar hadir pertemuan 1', 'type' => 'Attendance', 'done' => true],
-                    ['title' => 'Pengumpulan soal', 'type' => 'Submission', 'done' => false],
-                ],
-                'materials' => [],
-            ],
-            'Pertemuan 2' => [
-                'title' => 'Pertemuan 2',
-                'items' => [
-                    ['title' => 'Daftar hadir pertemuan 2', 'type' => 'Attendance', 'done' => false],
-                    ['title' => 'Pengumpulan project', 'type' => 'Submission', 'done' => false],
-                ],
-                'materials' => [],
-            ],
-            'Pertemuan 3' => [
-                'title' => 'Pertemuan 3',
-                'items' => [
-                    ['title' => 'Daftar hadir pertemuan 3', 'type' => 'Attendance', 'done' => false],
-                ],
-                'materials' => [],
-            ],
-        ];
+        $materialsByMeeting = $course->learningMaterials->groupBy(
+            fn ($material) => $this->normalizeMeetingTitle($material->meeting)
+        );
+        $meetingsWithContent = $materialsByMeeting
+            ->keys()
+            ->map(fn ($meeting) => $this->meetingNumber($meeting))
+            ->filter()
+            ->unique()
+            ->sort()
+            ->values()
+            ->all();
+        $visibleMeetings = collect([...$this->unlockedMeetings($meetingsWithContent), ...$meetingsWithContent])
+            ->filter(fn ($meeting) => $meeting >= 1 && $meeting <= self::MAX_MEETINGS)
+            ->unique()
+            ->sort()
+            ->values();
 
-        foreach ($course->learningMaterials as $material) {
-            $meeting = $material->meeting ?: 'Pertemuan 1';
+        return $visibleMeetings
+            ->map(fn ($meeting) => [
+                'title' => 'Pertemuan ' . $meeting,
+                'items' => $this->placeholderItems($meeting),
+                'materials' => $materialsByMeeting->get('Pertemuan ' . $meeting, collect())->values(),
+            ])
+            ->all();
+    }
 
-            if (! isset($meetings[$meeting])) {
-                $meetings[$meeting] = [
-                    'title' => $meeting,
-                    'items' => [],
-                    'materials' => [],
-                ];
+    private function unlockedMeetings(array $meetingsWithContent): array
+    {
+        $unlockedMeetings = [1];
+
+        for ($meeting = 1; $meeting < self::MAX_MEETINGS; $meeting++) {
+            if (! in_array($meeting, $meetingsWithContent, true)) {
+                break;
             }
 
-            $meetings[$meeting]['materials'][] = $material;
+            $unlockedMeetings[] = $meeting + 1;
         }
 
-        return array_values($meetings);
+        return $unlockedMeetings;
+    }
+
+    private function normalizeMeetingTitle(?string $meeting): string
+    {
+        $meetingNumber = $this->meetingNumber($meeting);
+
+        return 'Pertemuan ' . ($meetingNumber ?: 1);
+    }
+
+    private function meetingNumber(?string $meeting): ?int
+    {
+        preg_match('/pertemuan\s+(\d+)/i', $meeting ?? '', $matches);
+        $meetingNumber = (int) ($matches[1] ?? 0);
+
+        return $meetingNumber >= 1 && $meetingNumber <= self::MAX_MEETINGS ? $meetingNumber : null;
+    }
+
+    private function placeholderItems(int $meeting): array
+    {
+        return [
+            ['title' => 'Daftar hadir pertemuan ' . $meeting, 'type' => 'Attendance', 'done' => $meeting === 1],
+            ['title' => $meeting === 1 ? 'Pengumpulan soal' : 'Pengumpulan project', 'type' => 'Submission', 'done' => false],
+        ];
     }
 }

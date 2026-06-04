@@ -11,10 +11,19 @@ use Illuminate\Validation\Rule;
 
 class LearningMaterialController extends Controller
 {
+    private const MAX_MEETINGS = 16;
+
     public function store(Request $request, string $course)
     {
         $course = $this->findTeacherCourse($request, $course);
         $validatedData = $this->validateMaterial($request);
+
+        if (! $this->canCreateInMeeting($course, $validatedData['meeting'])) {
+            return redirect()
+                ->route('teacher.course.show', $course->id)
+                ->withInput()
+                ->with('error', __('sweetalert.flash.material.meeting_locked'));
+        }
 
         if ($request->hasFile('file_path')) {
             $validatedData['file_path'] = $request->file('file_path')->store('learning-materials', 'public');
@@ -109,5 +118,47 @@ class LearningMaterialController extends Controller
         if ($material->file_path) {
             Storage::disk('public')->delete($material->file_path);
         }
+    }
+
+    private function canCreateInMeeting(Course $course, string $meeting): bool
+    {
+        $meetingNumber = $this->meetingNumber($meeting);
+
+        if (! $meetingNumber) {
+            return false;
+        }
+
+        return in_array($meetingNumber, $this->unlockedMeetings($course), true);
+    }
+
+    private function unlockedMeetings(Course $course): array
+    {
+        $meetingsWithContent = $course->learningMaterials()
+            ->pluck('meeting')
+            ->map(fn ($meeting) => $this->meetingNumber($meeting))
+            ->filter()
+            ->unique()
+            ->sort()
+            ->values()
+            ->all();
+        $unlockedMeetings = [1];
+
+        for ($meeting = 1; $meeting < self::MAX_MEETINGS; $meeting++) {
+            if (! in_array($meeting, $meetingsWithContent, true)) {
+                break;
+            }
+
+            $unlockedMeetings[] = $meeting + 1;
+        }
+
+        return $unlockedMeetings;
+    }
+
+    private function meetingNumber(?string $meeting): ?int
+    {
+        preg_match('/pertemuan\s+(\d+)/i', $meeting ?? '', $matches);
+        $meetingNumber = (int) ($matches[1] ?? 0);
+
+        return $meetingNumber >= 1 && $meetingNumber <= self::MAX_MEETINGS ? $meetingNumber : null;
     }
 }

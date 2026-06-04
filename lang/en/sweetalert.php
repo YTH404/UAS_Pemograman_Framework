@@ -78,6 +78,7 @@ return [
             'created' => 'Learning material has been created.',
             'updated' => 'Learning material has been updated.',
             'deleted' => 'Learning material has been deleted.',
+            'meeting_locked' => 'This meeting is still locked. Add content to the previous meeting first.',
         ],
     ],
 ];
