@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
+use App\Models\Assignment;
 use App\Models\Course;
 use App\Models\DoneMark;
 use App\Models\Student;
@@ -19,12 +20,13 @@ class DashboardController extends Controller
             'studentClass.class.courses.teacher',
             'studentClass.class.courses.learningMaterials',
             'studentClass.class.courses.attendances',
-            'studentClass.class.courses.assignments',
+            'studentClass.class.courses.assignments.submissions' => fn ($query) => $query->where('student_id', $request->user()->id),
         ])->find($request->user()->id);
         $class = $student?->studentClass?->class;
 
         $courseSummary = $class?->courses
             ->map(function ($course) use ($student, $class) {
+                $this->syncMissingSubmissions($course, $student);
                 $this->syncMissingDoneMarks($course, $student);
 
                 return [
@@ -33,13 +35,18 @@ class DashboardController extends Controller
                     'class_code' => $course->classes?->class_code ?? $class?->class_code,
                     'teacher' => $course->teacher?->name ?? 'No teacher assigned',
                     'progress' => $this->progressForCourse($course, $student),
-                    'deadline' => 'No deadline set',
+                    'deadline' => $this->nextCourseDeadline($course),
+                    'assignment_total' => $course->assignments->count(),
                 ];
             })
             ->values()
             ->all() ?? [];
 
-        return view('student.dashboard', compact('student', 'class', 'courseSummary'));
+        $upcomingAssignments = $class
+            ? $this->upcomingAssignmentsForStudent($student, $class->courses->pluck('id')->all())
+            : collect();
+
+        return view('student.dashboard', compact('student', 'class', 'courseSummary', 'upcomingAssignments'));
     }
 
     public function showCourse(Request $request, string $course)
@@ -276,6 +283,51 @@ class DashboardController extends Controller
             'can_submit' => true,
             'button_label' => 'Submit Assignment',
         ];
+    }
+
+    private function upcomingAssignmentsForStudent(Student $student, array $courseIds)
+    {
+        if ($courseIds === []) {
+            return collect();
+        }
+
+        return Assignment::with([
+                'course',
+                'submissions' => fn ($query) => $query->where('student_id', $student->id),
+            ])
+            ->whereIn('course_id', $courseIds)
+            ->where(function ($query) {
+                $query->whereNull('ended_at')
+                    ->orWhere('ended_at', '>=', now());
+            })
+            ->orderByRaw('ended_at IS NULL')
+            ->orderBy('ended_at')
+            ->orderBy('started_at')
+            ->take(3)
+            ->get()
+            ->map(function ($assignment) {
+                $submission = $assignment->submissions->first();
+                $status = $this->assignmentStatus($assignment, $submission);
+
+                return [
+                    'course_id' => $assignment->course_id,
+                    'course' => $assignment->course?->course_name ?? 'Unknown course',
+                    'task' => $assignment->title,
+                    'due' => $assignment->ended_at?->format('d M Y · H:i') ?? 'No deadline',
+                    'type' => $submission?->submitted_at ? 'Submitted' : $status['label'],
+                    'status' => $status,
+                ];
+            });
+    }
+
+    private function nextCourseDeadline(Course $course): string
+    {
+        $assignment = $course->assignments
+            ->filter(fn ($assignment) => $assignment->ended_at === null || $assignment->ended_at->gte(now()))
+            ->sortBy(fn ($assignment) => $assignment->ended_at?->timestamp ?? PHP_INT_MAX)
+            ->first();
+
+        return $assignment?->ended_at?->format('d M Y · H:i') ?? 'No active deadline';
     }
 
     private function progressForCourse(Course $course, Student $student): int

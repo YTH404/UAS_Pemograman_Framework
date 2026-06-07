@@ -33,7 +33,6 @@ class DashboardController extends Controller
         $teacherTotals = [
             ['label' => 'Total class assigned', 'value' => $assignedCourses->pluck('class_id')->unique()->count(), 'note' => 'Active groups this term'],
             ['label' => 'Total course assigned', 'value' => $assignedCourses->count(), 'note' => 'Courses under your supervision'],
-            ['label' => 'Visible assigned courses', 'value' => count($classCourses), 'note' => 'Courses shown on this dashboard'],
         ];
 
         return view('teacher.dashboard', compact('teacher', 'teacherTotals', 'classCourses'));

@@ -13,21 +13,6 @@
         <x-sweet-alert-messages />
 
         @php
-            $upcomingAssignments = [
-                [
-                    'course' => 'Web Programming Fundamentals',
-                    'task' => 'Sprint 3 assignment',
-                    'due' => 'Tomorrow · 16:00',
-                    'type' => 'Essay + code submission',
-                ],
-                [
-                    'course' => 'Database Design and SQL',
-                    'task' => 'ER diagram revision',
-                    'due' => 'Thu · 11:30',
-                    'type' => 'Diagram upload',
-                ],
-            ];
-
             $courseCardStyles = [
                 ['surface' => 'bg-sky-50', 'shape' => 'bg-sky-200/70'],
                 ['surface' => 'bg-emerald-50', 'shape' => 'bg-emerald-200/70'],
@@ -89,8 +74,8 @@
 
                                 <div class="rounded-3xl bg-slate-950 p-5 text-white shadow-sm ring-1 ring-white/10">
                                     <p class="text-sm font-semibold uppercase tracking-[0.2em] text-sky-300">Total upcoming assignment</p>
-                                    <p class="mt-4 text-4xl font-semibold">{{ count(array_slice($upcomingAssignments, 0, 3)) }}</p>
-                                    <p class="mt-3 text-sm leading-6 text-slate-300">Tasks scheduled next and kept visible in the assignment card.</p>
+                                    <p class="mt-4 text-4xl font-semibold">{{ $upcomingAssignments->count() }}</p>
+                                    <p class="mt-3 text-sm leading-6 text-slate-300">Open or upcoming assignment windows from your courses.</p>
                                 </div>
                             </div>
                         </article>
@@ -103,7 +88,7 @@
                             </div>
 
                             <div class="mt-8 space-y-4">
-                                @foreach (array_slice($upcomingAssignments, 0, 3) as $assignment)
+                                @forelse ($upcomingAssignments as $assignment)
                                     <div class="rounded-3xl border border-white/10 bg-white/5 p-5">
                                         <div class="flex items-start justify-between gap-4">
                                             <div>
@@ -112,9 +97,18 @@
                                             </div>
                                             <span class="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-sky-200">{{ $assignment['due'] }}</span>
                                         </div>
-                                        <p class="mt-3 text-sm leading-6 text-slate-300">{{ $assignment['type'] }}</p>
+                                        <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
+                                            <span class="rounded-full bg-sky-400/10 px-3 py-1 text-xs font-semibold text-sky-200">{{ $assignment['type'] }}</span>
+                                            <a href="{{ route('student.course.show', $assignment['course_id']) }}" class="text-sm font-semibold text-white underline decoration-white/20 underline-offset-4 transition hover:decoration-white">
+                                                Open course
+                                            </a>
+                                        </div>
                                     </div>
-                                @endforeach
+                                @empty
+                                    <div class="rounded-3xl border border-white/10 bg-white/5 p-5 text-sm leading-6 text-slate-300">
+                                        No open or upcoming assignments right now. Tiny victory, honestly.
+                                    </div>
+                                @endforelse
                             </div>
                         </article>
                 </section>
@@ -140,6 +134,8 @@
                                     <h3 class="text-xl font-semibold text-slate-950">{{ $course['name'] }}</h3>
                                     <p class="mt-2 text-sm text-slate-600">Teacher: {{ $course['teacher'] }}</p>
                                     <p class="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{{ $course['class_code'] }}</p>
+                                    <p class="mt-4 text-sm text-slate-600">Next deadline: <span class="font-semibold text-slate-900">{{ $course['deadline'] }}</span></p>
+                                    <p class="mt-1 text-sm text-slate-600">Assignments: <span class="font-semibold text-slate-900">{{ $course['assignment_total'] }}</span></p>
 
                                     <div class="mt-6 space-y-3">
                                         <div class="flex items-center justify-between text-sm font-medium text-slate-600">

@@ -7,14 +7,6 @@
 @endsection
 
 @section('content')
-    @php
-        $dashboardStats = [
-            ['label' => 'Total Teachers', 'value' => 24, 'note' => 'Active instructors'],
-            ['label' => 'Total Classes', 'value' => 12, 'note' => 'Active learning groups'],
-            ['label' => 'Total Students', 'value' => 456, 'note' => 'Enrolled students'],
-        ];
-    @endphp
-
     <section class="space-y-6">
         <article class="overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/70 lg:p-10">
             <div class="flex items-center justify-between gap-4">
@@ -24,7 +16,7 @@
                 </div>
             </div>
 
-            <div class="mt-8 grid gap-4 lg:grid-cols-3">
+            <div class="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                 @foreach ($dashboardStats as $stat)
                     <div class="rounded-3xl bg-slate-950 p-5 text-white shadow-sm ring-1 ring-white/10">
                         <p class="text-sm font-semibold uppercase tracking-[0.2em] text-sky-300">{{ $stat['label'] }}</p>
@@ -66,16 +58,16 @@
                 </div>
             </a>
 
-            <div class="relative overflow-hidden rounded-[1.75rem] border border-slate-200 bg-amber-50 p-6 shadow-sm">
+            <a href="{{ route('admin.student.index') }}" class="group relative overflow-hidden rounded-[1.75rem] border border-slate-200 bg-amber-50 p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/70">
                 <div class="absolute -right-6 -top-4 h-24 w-24 rounded-full bg-amber-200/70 opacity-60"></div>
                 <div class="relative">
-                    <h3 class="text-xl font-semibold text-slate-950">System Settings</h3>
-                    <p class="mt-2 text-sm text-slate-600">Configure application preferences and policies</p>
-                    <div class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-amber-700">
-                        Coming soon <span>→</span>
+                    <h3 class="text-xl font-semibold text-slate-950">Manage Students</h3>
+                    <p class="mt-2 text-sm text-slate-600">Add, edit, or review student class placement</p>
+                    <div class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-amber-700 group-hover:gap-3 transition-all">
+                        View <span>→</span>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
     </section>
 @endsection
