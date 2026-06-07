@@ -22,7 +22,7 @@ class DashboardController extends Controller
                 'id' => $course->id,
                 'name' => $course->course_name,
                 'class_code' => $course->classes?->class_code,
-                'class_name' => $course->classes?->class_name ?? 'No class assigned',
+                'class_name' => $course->classes?->class_name ?? 'Belum ada kelas',
                 'student_enrolled' => $course->classes?->studentClasses->count() ?? 0,
                 'pending_submissions' => $course->assignments->sum(fn ($assignment) => $assignment->submissions->filter(fn ($submission) => $submission->submitted_at === null)->count()),
                 'submitted_submissions' => $course->assignments->sum(fn ($assignment) => $assignment->submissions->filter(fn ($submission) => $submission->submitted_at !== null)->count()),
@@ -31,8 +31,8 @@ class DashboardController extends Controller
             ->all();
 
         $teacherTotals = [
-            ['label' => 'Total class assigned', 'value' => $assignedCourses->pluck('class_id')->unique()->count(), 'note' => 'Active groups this term'],
-            ['label' => 'Total course assigned', 'value' => $assignedCourses->count(), 'note' => 'Courses under your supervision'],
+            ['label' => 'Total kelas diampu', 'value' => $assignedCourses->pluck('class_id')->unique()->count(), 'note' => 'Kelompok belajar aktif semester ini'],
+            ['label' => 'Total mata kuliah diampu', 'value' => $assignedCourses->count(), 'note' => 'Mata kuliah di bawah supervisi Anda'],
         ];
 
         return view('teacher.dashboard', compact('teacher', 'teacherTotals', 'classCourses'));

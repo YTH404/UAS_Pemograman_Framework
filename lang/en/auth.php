@@ -1,12 +1,12 @@
 <?php
 
 return [
-    'failed' => 'The username or password is incorrect.',
-    'password' => 'The password is incorrect.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'failed' => 'Nama pengguna atau kata sandi salah.',
+    'password' => 'Kata sandi salah.',
+    'throttle' => 'Terlalu banyak percobaan login. Coba lagi dalam :seconds detik.',
 
     'login' => [
-        'error_title' => 'We could not sign you in.',
-        'error_text' => 'Check your username and password, then try again.',
+        'error_title' => 'Login gagal.',
+        'error_text' => 'Periksa nama pengguna dan kata sandi, lalu coba lagi.',
     ],
 ];

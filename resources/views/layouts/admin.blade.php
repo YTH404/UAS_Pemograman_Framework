@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>{{ config('app.name', 'Campus LMS') }} | @yield('title', 'Admin Panel')</title>
+        <title>{{ config('app.name', 'Campus LMS') }} | @yield('title', 'Panel Admin')</title>
 
         @fonts
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -12,10 +12,10 @@
     <body class="min-h-screen bg-slate-50 text-slate-900 antialiased">
         @php
             $navItems = [
-                ['label' => 'Dashboard', 'route' => route('admin.dashboard'), 'active' => request()->routeIs('admin.dashboard')],
-                ['label' => 'Manage Teachers', 'route' => route('admin.teacher.index'), 'active' => request()->routeIs('admin.teacher.*')],
-                ['label' => 'Manage Students', 'route' => route('admin.student.index'), 'active' => request()->routeIs('admin.student.*')],
-                ['label' => 'Manage Classes', 'route' => route('admin.class.index'), 'active' => request()->routeIs('admin.class.*', 'admin.manage-class.*')],
+                ['label' => 'Beranda', 'route' => route('admin.dashboard'), 'active' => request()->routeIs('admin.dashboard')],
+                ['label' => 'Kelola Dosen', 'route' => route('admin.teacher.index'), 'active' => request()->routeIs('admin.teacher.*')],
+                ['label' => 'Kelola Mahasiswa', 'route' => route('admin.student.index'), 'active' => request()->routeIs('admin.student.*')],
+                ['label' => 'Kelola Kelas', 'route' => route('admin.class.index'), 'active' => request()->routeIs('admin.class.*', 'admin.manage-class.*')],
             ];
         @endphp
 
@@ -28,7 +28,7 @@
                     <div class="flex items-center gap-3 border-b border-slate-200 px-6 py-3">
                         <a href="{{ url('/') }}" class="group inline-flex items-center gap-3">
                             <span>
-                                <span class="block text-lg font-semibold text-slate-900">Admin Panel</span>
+                                <span class="block text-lg font-semibold text-slate-900">Panel Admin</span>
                             </span>
                         </a>
                     </div>
@@ -45,8 +45,8 @@
                         <div class="flex items-center gap-3 rounded-2xl bg-slate-50 p-4">
                             <div class="grid h-10 w-10 place-items-center rounded-full bg-purple-100 text-xs font-semibold text-purple-700 ring-1 ring-purple-200">AU</div>
                             <div class="min-w-0">
-                                <p class="text-sm font-semibold text-slate-900">Admin User</p>
-                                <p class="text-xs text-slate-500">System administrator</p>
+                                <p class="text-sm font-semibold text-slate-900">Admin</p>
+                                <p class="text-xs text-slate-500">Administrator sistem</p>
                             </div>
                         </div>
                         <form method="POST" action="{{ route('logout') }}" class="border-t border-slate-200 px-4 py-4" data-swal-logout>

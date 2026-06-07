@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>{{ config('app.name', 'Campus LMS') }} | Grade Assignment</title>
+        <title>{{ config('app.name', 'Campus LMS') }} | Nilai Tugas</title>
 
         @fonts
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -13,7 +13,7 @@
         <x-sweet-alert-messages />
 
         @php
-            $courseCode = $course->classes?->class_code ?? 'COURSE';
+            $courseCode = $course->classes?->class_code ?? 'MATAKULIAH';
             $courseTitle = $courseCode . '-' . $course->course_name;
         @endphp
 
@@ -24,8 +24,8 @@
                 <a href="{{ route('teacher.course.show', $course->id) }}" class="group inline-flex items-center gap-3">
                     <span class="grid h-11 w-11 place-items-center rounded-2xl bg-slate-900 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition-transform duration-200 group-hover:-translate-y-0.5">LMS</span>
                     <span>
-                        <span class="block text-lg font-semibold text-slate-900">Grade Assignment</span>
-                        <span class="block text-xs font-medium uppercase tracking-[0.2em] text-slate-500">Back to course</span>
+                        <span class="block text-lg font-semibold text-slate-900">Nilai Tugas</span>
+                        <span class="block text-xs font-medium uppercase tracking-[0.2em] text-slate-500">Kembali ke mata kuliah</span>
                     </span>
                 </a>
 
@@ -44,35 +44,35 @@
                     <p class="mt-3 text-sm leading-6 text-slate-600">{{ $courseTitle }}</p>
 
                     <nav class="mt-4 flex flex-wrap items-center gap-2 text-sm text-slate-500">
-                        <a href="{{ route('teacher.dashboard') }}" class="font-medium text-slate-700 transition hover:text-slate-950">Dashboard</a>
+                        <a href="{{ route('teacher.dashboard') }}" class="font-medium text-slate-700 transition hover:text-slate-950">Beranda</a>
                         <span>/</span>
-                        <a href="{{ route('teacher.course.show', $course->id) }}" class="font-medium text-slate-700 transition hover:text-slate-950">My courses</a>
+                        <a href="{{ route('teacher.course.show', $course->id) }}" class="font-medium text-slate-700 transition hover:text-slate-950">Mata kuliah saya</a>
                         <span>/</span>
-                        <span class="font-semibold text-violet-700">Grade</span>
+                        <span class="font-semibold text-violet-700">Nilai</span>
                     </nav>
 
                     <div class="mt-8 grid gap-4 md:grid-cols-3">
                         <div class="rounded-3xl bg-slate-950 p-5 text-white shadow-sm ring-1 ring-white/10">
-                            <p class="text-sm font-semibold uppercase tracking-[0.2em] text-sky-300">Students</p>
+                            <p class="text-sm font-semibold uppercase tracking-[0.2em] text-sky-300">Mahasiswa</p>
                             <p class="mt-4 text-4xl font-semibold">{{ $summary['total'] }}</p>
-                            <p class="mt-3 text-sm leading-6 text-slate-300">Students in this course class.</p>
+                            <p class="mt-3 text-sm leading-6 text-slate-300">Mahasiswa di kelas mata kuliah ini.</p>
                         </div>
                         <div class="rounded-3xl bg-slate-950 p-5 text-white shadow-sm ring-1 ring-white/10">
-                            <p class="text-sm font-semibold uppercase tracking-[0.2em] text-sky-300">Submitted</p>
+                            <p class="text-sm font-semibold uppercase tracking-[0.2em] text-sky-300">Terkumpul</p>
                             <p class="mt-4 text-4xl font-semibold">{{ $summary['submitted'] }}</p>
-                            <p class="mt-3 text-sm leading-6 text-slate-300">Students with submitted files.</p>
+                            <p class="mt-3 text-sm leading-6 text-slate-300">Mahasiswa yang sudah mengunggah file.</p>
                         </div>
                         <div class="rounded-3xl bg-slate-950 p-5 text-white shadow-sm ring-1 ring-white/10">
-                            <p class="text-sm font-semibold uppercase tracking-[0.2em] text-sky-300">Graded</p>
+                            <p class="text-sm font-semibold uppercase tracking-[0.2em] text-sky-300">Dinilai</p>
                             <p class="mt-4 text-4xl font-semibold">{{ $summary['graded'] }}</p>
-                            <p class="mt-3 text-sm leading-6 text-slate-300">Submission rows with saved grades.</p>
+                            <p class="mt-3 text-sm leading-6 text-slate-300">Pengumpulan yang sudah memiliki nilai.</p>
                         </div>
                     </div>
                 </section>
 
                 <div class="flex items-center gap-4">
                     <div class="h-px flex-1 bg-gradient-to-r from-transparent via-slate-300 to-transparent"></div>
-                    <span class="text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">Student Submissions</span>
+                    <span class="text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">Pengumpulan Mahasiswa</span>
                     <div class="h-px flex-1 bg-gradient-to-r from-transparent via-slate-300 to-transparent"></div>
                 </div>
 
@@ -92,13 +92,13 @@
                                     <div class="mt-3 flex flex-wrap gap-2">
                                         @if ($hasSubmitted)
                                             <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
-                                                Submitted {{ $submission->submitted_at?->format('d M Y H:i') }}
+                                                Dikumpulkan {{ $submission->submitted_at?->format('d M Y H:i') }}
                                             </span>
                                             <span class="rounded-full bg-violet-100 px-3 py-1 text-xs font-semibold text-violet-700">
-                                                {{ $submission->grade !== null ? 'Grade: ' . $submission->grade . '/100' : 'Not graded yet' }}
+                                                {{ $submission->grade !== null ? 'Nilai: ' . $submission->grade . '/100' : 'Belum dinilai' }}
                                             </span>
                                         @else
-                                            <span class="rounded-full bg-rose-100 px-3 py-1 text-xs font-semibold text-rose-700">No submission yet</span>
+                                            <span class="rounded-full bg-rose-100 px-3 py-1 text-xs font-semibold text-rose-700">Belum mengumpulkan</span>
                                         @endif
                                     </div>
 
@@ -111,9 +111,9 @@
                                             @endforeach
                                         </div>
                                     @elseif ($hasSubmitted)
-                                        <p class="mt-4 text-sm text-slate-500">Submitted, but no file is attached.</p>
+                                        <p class="mt-4 text-sm text-slate-500">Sudah dikumpulkan, tetapi tidak ada file terlampir.</p>
                                     @else
-                                        <p class="mt-4 text-sm text-slate-500">This student has not uploaded files for this assignment.</p>
+                                        <p class="mt-4 text-sm text-slate-500">Mahasiswa ini belum mengunggah file untuk tugas ini.</p>
                                     @endif
                                 </div>
 
@@ -129,17 +129,17 @@
                                             data-submitted-at="{{ $submission->submitted_at?->format('d M Y H:i') }}"
                                             class="rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:-translate-y-0.5 hover:bg-slate-800"
                                         >
-                                            {{ $submission->grade !== null ? 'Edit Grade' : 'Give Grade' }}
+                                            {{ $submission->grade !== null ? 'Ubah Nilai' : 'Beri Nilai' }}
                                         </button>
                                     @else
-                                        <span class="rounded-full border border-slate-200 bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-500">Grade disabled</span>
+                                        <span class="rounded-full border border-slate-200 bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-500">Penilaian nonaktif</span>
                                     @endif
                                 </div>
                             </div>
                         </article>
                     @empty
                         <article class="rounded-[1.75rem] border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm">
-                            No students are assigned to this course class yet.
+                            Belum ada mahasiswa pada kelas mata kuliah ini.
                         </article>
                     @endforelse
                 </section>
@@ -150,10 +150,10 @@
             <div class="w-full max-w-[calc(100vw-2rem)] rounded-[2rem] bg-white shadow-2xl shadow-slate-950/30 sm:max-w-lg">
                 <div class="flex items-start justify-between gap-4 border-b border-slate-200 px-6 py-5">
                     <div>
-                        <p class="text-xs font-semibold uppercase tracking-[0.22em] text-violet-700">Assignment Grade</p>
-                        <h2 class="mt-2 text-2xl font-semibold tracking-tight text-slate-950" data-grade-student>Give grade</h2>
+                        <p class="text-xs font-semibold uppercase tracking-[0.22em] text-violet-700">Nilai Tugas</p>
+                        <h2 class="mt-2 text-2xl font-semibold tracking-tight text-slate-950" data-grade-student>Beri nilai</h2>
                     </div>
-                    <button type="button" data-close-grade-modal class="rounded-full border border-slate-200 px-3 py-1 text-sm font-semibold text-slate-600 transition hover:bg-slate-100">Close</button>
+                    <button type="button" data-close-grade-modal class="rounded-full border border-slate-200 px-3 py-1 text-sm font-semibold text-slate-600 transition hover:bg-slate-100">Tutup</button>
                 </div>
 
                 <form method="POST" action="#" class="space-y-5 px-6 py-6" data-grade-form>
@@ -161,22 +161,22 @@
                     @method('PATCH')
 
                     <div class="rounded-2xl border border-violet-200 bg-violet-50 px-4 py-3 text-sm leading-6 text-violet-800">
-                        Enter an integer grade from 0 to 100. Leave it empty to clear the current grade.
+                        Masukkan nilai bilangan bulat dari 0 sampai 100. Kosongkan untuk menghapus nilai saat ini.
                     </div>
 
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
-                        <p><span class="font-semibold text-slate-800">Username:</span> <span data-grade-username>-</span></p>
-                        <p><span class="font-semibold text-slate-800">Submitted:</span> <span data-grade-submitted-at>-</span></p>
+                        <p><span class="font-semibold text-slate-800">Nama pengguna:</span> <span data-grade-username>-</span></p>
+                        <p><span class="font-semibold text-slate-800">Dikumpulkan:</span> <span data-grade-submitted-at>-</span></p>
                     </div>
 
                     <label class="block">
-                        <span class="mb-2 block text-sm font-medium text-slate-700">Grade</span>
+                        <span class="mb-2 block text-sm font-medium text-slate-700">Nilai</span>
                         <input type="number" name="grade" min="0" max="100" step="1" class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-violet-500 focus:bg-white" data-grade-input>
                     </label>
 
                     <div class="flex justify-end gap-3">
-                        <button type="button" data-close-grade-modal class="rounded-2xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">Cancel</button>
-                        <button type="submit" class="rounded-2xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:-translate-y-0.5 hover:bg-slate-800">Save Grade</button>
+                        <button type="button" data-close-grade-modal class="rounded-2xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">Batal</button>
+                        <button type="submit" class="rounded-2xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:-translate-y-0.5 hover:bg-slate-800">Simpan Nilai</button>
                     </div>
                 </form>
             </div>
@@ -210,7 +210,7 @@
                 document.querySelectorAll('[data-open-grade-modal]').forEach((button) => {
                     button.addEventListener('click', () => {
                         form.action = button.dataset.action;
-                        student.textContent = button.dataset.student || 'Give grade';
+                        student.textContent = button.dataset.student || 'Beri nilai';
                         username.textContent = button.dataset.username || '-';
                         submittedAt.textContent = button.dataset.submittedAt || '-';
                         grade.value = button.dataset.grade || '';

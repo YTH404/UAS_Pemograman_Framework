@@ -33,7 +33,7 @@ class DashboardController extends Controller
                     'id' => $course->id,
                     'name' => $course->course_name,
                     'class_code' => $course->classes?->class_code ?? $class?->class_code,
-                    'teacher' => $course->teacher?->name ?? 'No teacher assigned',
+                    'teacher' => $course->teacher?->name ?? 'Belum ada dosen',
                     'progress' => $this->progressForCourse($course, $student),
                     'deadline' => $this->nextCourseDeadline($course),
                     'assignment_total' => $course->assignments->count(),
@@ -178,7 +178,7 @@ class DashboardController extends Controller
     {
         if ($attendanceStudent?->filled_at !== null) {
             return [
-                'label' => '✓ Present',
+                'label' => '✓ Hadir',
                 'variant' => 'success',
                 'can_fill' => false,
             ];
@@ -186,7 +186,7 @@ class DashboardController extends Controller
 
         if (! $attendance->hasStarted()) {
             return [
-                'label' => 'Not opened',
+                'label' => 'Belum dibuka',
                 'variant' => 'muted',
                 'can_fill' => false,
             ];
@@ -194,14 +194,14 @@ class DashboardController extends Controller
 
         if ($attendance->hasEnded()) {
             return [
-                'label' => 'Absent',
+                'label' => 'Tidak hadir',
                 'variant' => 'danger',
                 'can_fill' => false,
             ];
         }
 
         return [
-            'label' => 'Fill Attendance',
+            'label' => 'Isi Presensi',
             'variant' => 'action',
             'can_fill' => true,
         ];
@@ -254,7 +254,7 @@ class DashboardController extends Controller
     {
         if (! $assignment->hasStarted()) {
             return [
-                'label' => 'Not opened',
+                'label' => 'Belum dibuka',
                 'variant' => 'muted',
                 'can_submit' => false,
                 'button_label' => null,
@@ -263,7 +263,7 @@ class DashboardController extends Controller
 
         if ($assignment->hasEnded()) {
             return [
-                'label' => $submission?->submitted_at ? '✓ Submitted' : 'Closed',
+                'label' => $submission?->submitted_at ? '✓ Terkumpul' : 'Ditutup',
                 'variant' => $submission?->submitted_at ? 'success' : 'danger',
                 'can_submit' => false,
                 'button_label' => null,
@@ -272,18 +272,18 @@ class DashboardController extends Controller
 
         if ($submission?->submitted_at !== null) {
             return [
-                'label' => '✓ Submitted',
+                'label' => '✓ Terkumpul',
                 'variant' => 'success',
                 'can_submit' => true,
-                'button_label' => 'Replace Submission',
+                'button_label' => 'Ganti Pengumpulan',
             ];
         }
 
         return [
-            'label' => 'Submit Assignment',
+            'label' => 'Kumpulkan Tugas',
             'variant' => 'action',
             'can_submit' => true,
-            'button_label' => 'Submit Assignment',
+            'button_label' => 'Kumpulkan Tugas',
         ];
     }
 
@@ -313,10 +313,10 @@ class DashboardController extends Controller
 
                 return [
                     'course_id' => $assignment->course_id,
-                    'course' => $assignment->course?->course_name ?? 'Unknown course',
+                    'course' => $assignment->course?->course_name ?? 'Mata kuliah tidak diketahui',
                     'task' => $assignment->title,
-                    'due' => $assignment->ended_at?->format('d M Y · H:i') ?? 'No deadline',
-                    'type' => $submission?->submitted_at ? 'Submitted' : $status['label'],
+                    'due' => $assignment->ended_at?->format('d M Y · H:i') ?? 'Tanpa tenggat',
+                    'type' => $submission?->submitted_at ? 'Terkumpul' : $status['label'],
                     'status' => $status,
                 ];
             });
@@ -329,7 +329,7 @@ class DashboardController extends Controller
             ->sortBy(fn ($assignment) => $assignment->ended_at?->timestamp ?? PHP_INT_MAX)
             ->first();
 
-        return $assignment?->ended_at?->format('d M Y · H:i') ?? 'No active deadline';
+        return $assignment?->ended_at?->format('d M Y · H:i') ?? 'Tidak ada tenggat aktif';
     }
 
     private function progressForCourse(Course $course, Student $student): int

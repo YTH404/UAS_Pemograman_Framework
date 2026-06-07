@@ -2,116 +2,116 @@
 
 return [
     'buttons' => [
-        'cancel' => 'Cancel',
+        'cancel' => 'Batal',
     ],
 
     'logout' => [
-        'title' => 'Logout now?',
-        'text' => 'You will be signed out of your account.',
-        'confirm' => 'Yes, logout',
+        'title' => 'Logout sekarang?',
+        'text' => 'Anda akan keluar dari akun.',
+        'confirm' => 'Ya, Logout',
     ],
 
     'delete' => [
         'default' => [
-            'title' => 'Delete this item?',
-            'text' => 'This action cannot be undone.',
-            'confirm' => 'Yes, delete',
+            'title' => 'Hapus item ini?',
+            'text' => 'Tindakan ini tidak dapat dibatalkan.',
+            'confirm' => 'Ya, hapus',
         ],
 
         'class' => [
-            'title' => 'Delete class?',
-            'text' => 'This will permanently remove :name.',
-            'confirm' => 'Yes, delete',
+            'title' => 'Hapus kelas?',
+            'text' => 'Ini akan menghapus :name secara permanen.',
+            'confirm' => 'Ya, hapus',
         ],
 
         'teacher' => [
-            'title' => 'Delete teacher?',
-            'text' => 'This will permanently remove :name.',
-            'confirm' => 'Yes, delete',
+            'title' => 'Hapus dosen?',
+            'text' => 'Ini akan menghapus :name secara permanen.',
+            'confirm' => 'Ya, hapus',
         ],
 
         'student' => [
-            'title' => 'Delete student?',
-            'text' => 'This will remove :name and their class assignment.',
-            'confirm' => 'Yes, delete',
+            'title' => 'Hapus mahasiswa?',
+            'text' => 'Ini akan menghapus :name dan relasi kelasnya.',
+            'confirm' => 'Ya, hapus',
         ],
 
         'course' => [
-            'title' => 'Delete course?',
-            'text' => 'This will remove :name from this class.',
-            'confirm' => 'Yes, delete',
+            'title' => 'Hapus mata kuliah?',
+            'text' => 'Ini akan menghapus :name dari kelas ini.',
+            'confirm' => 'Ya, hapus',
         ],
     ],
 
     'flash' => [
         'auth' => [
-            'login' => 'Logged in successfully.',
-            'logout' => 'Logged out successfully.',
+            'login' => 'Login berhasil.',
+            'logout' => 'Logout berhasil.',
         ],
 
         'class' => [
-            'created' => 'Class has been created.',
-            'updated' => 'Class has been updated.',
-            'deleted' => 'Class has been deleted.',
-            'delete_blocked' => 'Class cannot be deleted while students or courses are linked to it.',
+            'created' => 'Kelas berhasil dibuat.',
+            'updated' => 'Kelas berhasil diperbarui.',
+            'deleted' => 'Kelas berhasil dihapus.',
+            'delete_blocked' => 'Kelas tidak dapat dihapus selama masih terhubung dengan mahasiswa atau mata kuliah.',
         ],
 
         'teacher' => [
-            'created' => 'Teacher has been created.',
-            'updated' => 'Teacher has been updated.',
-            'deleted' => 'Teacher has been deleted.',
+            'created' => 'Dosen berhasil dibuat.',
+            'updated' => 'Dosen berhasil diperbarui.',
+            'deleted' => 'Dosen berhasil dihapus.',
         ],
 
         'student' => [
-            'created' => 'Student has been created.',
-            'updated' => 'Student has been updated.',
-            'deleted' => 'Student has been deleted.',
+            'created' => 'Mahasiswa berhasil dibuat.',
+            'updated' => 'Mahasiswa berhasil diperbarui.',
+            'deleted' => 'Mahasiswa berhasil dihapus.',
         ],
 
         'course' => [
-            'created' => 'Course has been created.',
-            'updated' => 'Course has been updated.',
-            'deleted' => 'Course has been deleted.',
+            'created' => 'Mata kuliah berhasil dibuat.',
+            'updated' => 'Mata kuliah berhasil diperbarui.',
+            'deleted' => 'Mata kuliah berhasil dihapus.',
         ],
 
         'material' => [
-            'created' => 'Learning material has been created.',
-            'updated' => 'Learning material has been updated.',
-            'deleted' => 'Learning material has been deleted.',
-            'meeting_locked' => 'This meeting is still locked. Add content to the previous meeting first.',
+            'created' => 'Materi berhasil dibuat.',
+            'updated' => 'Materi berhasil diperbarui.',
+            'deleted' => 'Materi berhasil dihapus.',
+            'meeting_locked' => 'Pertemuan ini masih terkunci. Tambahkan konten pada pertemuan sebelumnya terlebih dahulu.',
         ],
 
         'attendance' => [
-            'created' => 'Attendance has been created.',
-            'updated' => 'Attendance has been updated.',
-            'filled' => 'Your attendance has been submitted.',
-            'meeting_locked' => 'This meeting is still locked. Add content to the previous meeting first.',
-            'duplicate' => 'Attendance already exists for this meeting.',
-            'not_open' => 'This attendance is not open yet.',
-            'closed' => 'This attendance has already closed.',
-            'already_filled' => 'You have already filled this attendance.',
+            'created' => 'Presensi berhasil dibuat.',
+            'updated' => 'Presensi berhasil diperbarui.',
+            'filled' => 'Presensi Anda berhasil dikirim.',
+            'meeting_locked' => 'Pertemuan ini masih terkunci. Tambahkan konten pada pertemuan sebelumnya terlebih dahulu.',
+            'duplicate' => 'Presensi sudah tersedia untuk pertemuan ini.',
+            'not_open' => 'Presensi ini belum dibuka.',
+            'closed' => 'Presensi ini sudah ditutup.',
+            'already_filled' => 'Anda sudah mengisi presensi ini.',
         ],
 
         'assignment' => [
-            'created' => 'Assignment has been created.',
-            'updated' => 'Assignment has been updated.',
-            'meeting_locked' => 'This meeting is still locked. Add content to the previous meeting first.',
+            'created' => 'Tugas berhasil dibuat.',
+            'updated' => 'Tugas berhasil diperbarui.',
+            'meeting_locked' => 'Pertemuan ini masih terkunci. Tambahkan konten pada pertemuan sebelumnya terlebih dahulu.',
         ],
 
         'submission' => [
-            'submitted' => 'Your assignment has been submitted.',
-            'not_open' => 'This assignment is not open yet.',
-            'closed' => 'This assignment has already closed.',
+            'submitted' => 'Tugas Anda berhasil dikumpulkan.',
+            'not_open' => 'Tugas ini belum dibuka.',
+            'closed' => 'Tugas ini sudah ditutup.',
         ],
 
         'grade' => [
-            'updated' => 'Submission grade has been saved.',
-            'missing_submission' => 'This student has not submitted the assignment yet.',
+            'updated' => 'Nilai pengumpulan berhasil disimpan.',
+            'missing_submission' => 'Mahasiswa ini belum mengumpulkan tugas.',
         ],
 
         'done_mark' => [
-            'marked' => 'Activity has been marked as done.',
-            'unmarked' => 'Activity has been marked as not done.',
+            'marked' => 'Aktivitas berhasil ditandai selesai.',
+            'unmarked' => 'Aktivitas berhasil ditandai belum selesai.',
         ],
     ],
 ];

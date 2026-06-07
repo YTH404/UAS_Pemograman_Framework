@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>{{ config('app.name', 'Campus LMS') }} | Teacher Dashboard</title>
+        <title>{{ config('app.name', 'Campus LMS') }} | Beranda Dosen</title>
 
         @fonts
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -32,7 +32,7 @@
                 <a href="{{ url('/') }}" class="group inline-flex items-center gap-3">
                     <span class="grid h-11 w-11 place-items-center rounded-2xl bg-slate-900 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition-transform duration-200 group-hover:-translate-y-0.5">LMS</span>
                     <span>
-                        <span class="block text-lg font-semibold text-slate-900">Teacher Dashboard</span>
+                        <span class="block text-lg font-semibold text-slate-900">Beranda Dosen</span>
                     </span>
                 </a>
 
@@ -42,7 +42,7 @@
                         <div class="text-right">
                             <p class="text-sm font-semibold text-slate-900">
                                 {{ $teacher->name }} 
-                                <span class="font-medium text-slate-500">- Teacher</span></p>
+                                <span class="font-medium text-slate-500">- Dosen</span></p>
                         </div>
                     </div>
 
@@ -60,7 +60,7 @@
                     <article class="overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/70 lg:p-10">
                         <div class="flex items-center justify-between gap-4">
                             <div>
-                                <h2 class="text-3xl font-semibold tracking-tight text-slate-950">Your learning workspace for courses, progress, and deadlines.</h2>
+                                <h2 class="text-3xl font-semibold tracking-tight text-slate-950">Ruang kerja pembelajaran untuk mata kuliah, progres, dan tenggat.</h2>
                             </div>
                         </div>
 
@@ -79,7 +79,7 @@
 
                 <div class="flex items-center gap-4">
                     <div class="h-px flex-1 bg-gradient-to-r from-transparent via-slate-300 to-transparent"></div>
-                    <span class="text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">Assigned Courses</span>
+                    <span class="text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">Mata Kuliah Diampu</span>
                     <div class="h-px flex-1 bg-gradient-to-r from-transparent via-slate-300 to-transparent"></div>
                 </div>
 
@@ -96,20 +96,20 @@
 
                                 <div class="relative">
                                     <h3 class="text-xl font-semibold text-slate-950">{{ $course['name'] }}</h3>
-                                    <p class="mt-2 text-sm text-slate-600">Class: {{ $course['class_name'] }}</p>
+                                    <p class="mt-2 text-sm text-slate-600">Kelas: {{ $course['class_name'] }}</p>
                                     <p class="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{{ $course['class_code'] }}</p>
 
                                     <div class="mt-6 space-y-4">
                                         <div class="flex items-center justify-between text-sm">
-                                            <span class="font-medium text-slate-600">Student enrolled</span>
+                                            <span class="font-medium text-slate-600">Mahasiswa terdaftar</span>
                                             <span class="font-semibold text-slate-950">{{ $course['student_enrolled'] }}</span>
                                         </div>
                                         <div class="flex items-center justify-between text-sm">
-                                            <span class="font-medium text-slate-600">Pending submission</span>
+                                            <span class="font-medium text-slate-600">Belum dikumpulkan</span>
                                             <span class="font-semibold text-slate-950">{{ $course['pending_submissions'] }}</span>
                                         </div>
                                         <div class="flex items-center justify-between text-sm">
-                                            <span class="font-medium text-slate-600">Submitted submission</span>
+                                            <span class="font-medium text-slate-600">Sudah dikumpulkan</span>
                                             <span class="font-semibold text-slate-950">{{ $course['submitted_submissions'] }}</span>
                                         </div>
                                     </div>
@@ -118,7 +118,7 @@
                             </a>
                         @empty
                             <div class="rounded-[1.75rem] border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm md:col-span-2 xl:col-span-3">
-                                No courses are assigned to you yet.
+                                Belum ada mata kuliah yang diampu.
                             </div>
                         @endforelse
                     </div>

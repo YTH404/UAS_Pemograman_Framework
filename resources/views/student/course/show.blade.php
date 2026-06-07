@@ -13,7 +13,7 @@
         <x-sweet-alert-messages />
 
         @php
-            $courseCode = $course->classes?->class_code ?? $class?->class_code ?? 'COURSE';
+            $courseCode = $course->classes?->class_code ?? $class?->class_code ?? 'MATAKULIAH';
             $courseTitle = $courseCode . '-' . $course->course_name;
         @endphp
 
@@ -23,7 +23,7 @@
             <header class="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-5 lg:px-8">
                 <a href="{{ route('dashboard') }}" class="group inline-flex items-center gap-3">
                     <span class="grid h-11 w-11 place-items-center rounded-2xl bg-slate-900 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition-transform duration-200 group-hover:-translate-y-0.5">LMS</span>
-                    <span class="block text-lg font-semibold text-slate-900">Course Content</span>
+                    <span class="block text-lg font-semibold text-slate-900">Konten Mata Kuliah</span>
                 </a>
 
                 <form method="POST" action="{{ route('logout') }}" data-swal-logout>
@@ -38,9 +38,9 @@
                 <section class="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/70 lg:p-10">
                     <h1 class="text-3xl font-semibold tracking-tight text-slate-950 lg:text-4xl">{{ $courseTitle }}</h1>
                     <nav class="mt-4 flex flex-wrap items-center gap-2 text-sm text-slate-500">
-                        <a href="{{ route('dashboard') }}" class="font-medium text-slate-700 transition hover:text-slate-950">Dashboard</a>
+                        <a href="{{ route('dashboard') }}" class="font-medium text-slate-700 transition hover:text-slate-950">Beranda</a>
                         <span>/</span>
-                        <span class="font-medium text-slate-700">My courses</span>
+                        <span class="font-medium text-slate-700">Mata kuliah saya</span>
                         <span>/</span>
                         <span class="font-semibold text-sky-700">{{ $courseCode }}</span>
                     </nav>
@@ -69,14 +69,14 @@
                                     <div class="rounded-[1.5rem] border border-violet-200 bg-violet-50/70 p-5 shadow-sm">
                                         <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                                             <div>
-                                                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-violet-700">Assignment</p>
+                                                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-violet-700">Tugas</p>
                                                 <h3 class="mt-2 text-lg font-semibold text-slate-950">{{ $assignment['title'] }}</h3>
                                                 @if ($assignment['description'])
                                                     <p class="mt-2 text-sm leading-6 text-slate-600">{{ $assignment['description'] }}</p>
                                                 @endif
                                                 <p class="mt-2 text-sm leading-6 text-slate-600">
-                                                    Open: {{ $assignment['started_at']?->format('d M Y H:i') ?? '-' }} ·
-                                                    Close: {{ $assignment['ended_at']?->format('d M Y H:i') ?? '-' }}
+                                                    Buka: {{ $assignment['started_at']?->format('d M Y H:i') ?? '-' }} ·
+                                                    Tutup: {{ $assignment['ended_at']?->format('d M Y H:i') ?? '-' }}
                                                 </p>
 
                                                 @if ($assignment['files']->isNotEmpty())
@@ -89,7 +89,7 @@
 
                                                 @if ($assignment['submitted_at'] !== null)
                                                     <p class="mt-3 text-sm font-semibold text-violet-700">
-                                                        {{ $assignment['grade'] !== null ? 'Grade: ' . $assignment['grade'] . '/100' : 'Not graded yet' }}
+                                                        {{ $assignment['grade'] !== null ? 'Nilai: ' . $assignment['grade'] . '/100' : 'Belum dinilai' }}
                                                     </p>
                                                 @endif
                                             </div>
@@ -119,7 +119,7 @@
                                                         @csrf
                                                         @method('PATCH')
                                                         <button type="submit" class="inline-flex w-fit items-center rounded-full px-4 py-2 text-sm font-semibold transition {{ $assignment['done_mark']['is_done'] ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'border border-slate-300 bg-white text-slate-700 hover:border-violet-300 hover:bg-violet-50 hover:text-violet-700' }}">
-                                                            {{ $assignment['done_mark']['is_done'] ? '✓ Done' : 'Mark as Done' }}
+                                                            {{ $assignment['done_mark']['is_done'] ? '✓ Selesai' : 'Tandai Selesai' }}
                                                         </button>
                                                     </form>
                                                 @endif
@@ -141,11 +141,11 @@
                                     <div class="rounded-[1.5rem] border border-emerald-200 bg-emerald-50/70 p-5 shadow-sm">
                                         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                                             <div>
-                                                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">Attendance</p>
+                                                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">Presensi</p>
                                                 <h3 class="mt-2 text-lg font-semibold text-slate-950">{{ $attendance['title'] }}</h3>
                                                 <p class="mt-2 text-sm leading-6 text-slate-600">
-                                                    Open: {{ $attendance['started_at']?->format('d M Y H:i') ?? '-' }} ·
-                                                    Close: {{ $attendance['ended_at']?->format('d M Y H:i') ?? '-' }}
+                                                    Buka: {{ $attendance['started_at']?->format('d M Y H:i') ?? '-' }} ·
+                                                    Tutup: {{ $attendance['ended_at']?->format('d M Y H:i') ?? '-' }}
                                                 </p>
                                             </div>
 
@@ -173,7 +173,7 @@
                                                         @csrf
                                                         @method('PATCH')
                                                         <button type="submit" class="inline-flex w-fit items-center rounded-full px-4 py-2 text-sm font-semibold transition {{ $attendance['done_mark']['is_done'] ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'border border-slate-300 bg-white text-slate-700 hover:border-sky-300 hover:bg-sky-50 hover:text-sky-700' }}">
-                                                            {{ $attendance['done_mark']['is_done'] ? '✓ Done' : 'Mark as Done' }}
+                                                            {{ $attendance['done_mark']['is_done'] ? '✓ Selesai' : 'Tandai Selesai' }}
                                                         </button>
                                                     </form>
                                                 @endif
@@ -192,7 +192,7 @@
                                         <div class="space-y-4">
                                             <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                                                 <div>
-                                                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Materials · {{ ucfirst($material->material_type) }}</p>
+                                                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Materi · {{ ['document' => 'Dokumen', 'video' => 'Video', 'link' => 'Tautan'][$material->material_type] ?? ucfirst($material->material_type) }}</p>
                                                     @if ($material->material_type === 'document')
                                                         <a href="{{ $material->fileUrl() }}" target="_blank" class="mt-2 inline-flex text-lg font-semibold text-slate-950 transition hover:text-sky-700">{{ $material->title }}</a>
                                                     @elseif ($material->external_link)
@@ -211,7 +211,7 @@
                                                         @csrf
                                                         @method('PATCH')
                                                         <button type="submit" class="inline-flex w-fit items-center rounded-full px-4 py-2 text-sm font-semibold transition {{ $doneMark['is_done'] ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'border border-slate-300 bg-white text-slate-700 hover:border-sky-300 hover:bg-sky-50 hover:text-sky-700' }}">
-                                                            {{ $doneMark['is_done'] ? '✓ Done' : 'Mark as Done' }}
+                                                            {{ $doneMark['is_done'] ? '✓ Selesai' : 'Tandai Selesai' }}
                                                         </button>
                                                     </form>
                                                 @endif
@@ -236,26 +236,26 @@
             <div class="w-full max-w-[calc(100vw-2rem)] rounded-[2rem] bg-white shadow-2xl shadow-slate-950/30 sm:max-w-lg">
                 <div class="flex items-start justify-between gap-4 border-b border-slate-200 px-6 py-5">
                     <div>
-                        <p class="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-700">Attendance</p>
-                        <h2 class="mt-2 text-2xl font-semibold tracking-tight text-slate-950" data-attendance-title>Fill attendance</h2>
+                        <p class="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-700">Presensi</p>
+                        <h2 class="mt-2 text-2xl font-semibold tracking-tight text-slate-950" data-attendance-title>Isi presensi</h2>
                     </div>
-                    <button type="button" data-close-attendance-modal class="rounded-full border border-slate-200 px-3 py-1 text-sm font-semibold text-slate-600 transition hover:bg-slate-100">Close</button>
+                    <button type="button" data-close-attendance-modal class="rounded-full border border-slate-200 px-3 py-1 text-sm font-semibold text-slate-600 transition hover:bg-slate-100">Tutup</button>
                 </div>
 
                 <form method="POST" action="#" class="space-y-5 px-6 py-6" data-attendance-form>
                     @csrf
                     <div class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm leading-6 text-emerald-800">
-                        Confirming this form will mark your attendance as present. You can only fill this attendance once.
+                        Konfirmasi formulir ini akan menandai presensi Anda sebagai hadir. Presensi ini hanya bisa diisi satu kali.
                     </div>
 
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
-                        <p><span class="font-semibold text-slate-800">Open:</span> <span data-attendance-started-at>-</span></p>
-                        <p><span class="font-semibold text-slate-800">Close:</span> <span data-attendance-ended-at>-</span></p>
+                        <p><span class="font-semibold text-slate-800">Buka:</span> <span data-attendance-started-at>-</span></p>
+                        <p><span class="font-semibold text-slate-800">Tutup:</span> <span data-attendance-ended-at>-</span></p>
                     </div>
 
                     <div class="flex justify-end gap-3">
-                        <button type="button" data-close-attendance-modal class="rounded-2xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">Cancel</button>
-                        <button type="submit" class="rounded-2xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:-translate-y-0.5 hover:bg-slate-800">Confirm Attendance</button>
+                        <button type="button" data-close-attendance-modal class="rounded-2xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">Batal</button>
+                        <button type="submit" class="rounded-2xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:-translate-y-0.5 hover:bg-slate-800">Konfirmasi Presensi</button>
                     </div>
                 </form>
             </div>
@@ -265,31 +265,31 @@
             <div class="w-full max-w-[calc(100vw-2rem)] rounded-[2rem] bg-white shadow-2xl shadow-slate-950/30 sm:max-w-lg">
                 <div class="flex items-start justify-between gap-4 border-b border-slate-200 px-6 py-5">
                     <div>
-                        <p class="text-xs font-semibold uppercase tracking-[0.22em] text-violet-700">Assignment</p>
-                        <h2 class="mt-2 text-2xl font-semibold tracking-tight text-slate-950" data-assignment-title>Submit assignment</h2>
+                        <p class="text-xs font-semibold uppercase tracking-[0.22em] text-violet-700">Tugas</p>
+                        <h2 class="mt-2 text-2xl font-semibold tracking-tight text-slate-950" data-assignment-title>Kumpulkan tugas</h2>
                     </div>
-                    <button type="button" data-close-assignment-modal class="rounded-full border border-slate-200 px-3 py-1 text-sm font-semibold text-slate-600 transition hover:bg-slate-100">Close</button>
+                    <button type="button" data-close-assignment-modal class="rounded-full border border-slate-200 px-3 py-1 text-sm font-semibold text-slate-600 transition hover:bg-slate-100">Tutup</button>
                 </div>
 
                 <form method="POST" action="#" enctype="multipart/form-data" class="space-y-5 px-6 py-6" data-assignment-form>
                     @csrf
                     <div class="rounded-2xl border border-violet-200 bg-violet-50 px-4 py-3 text-sm leading-6 text-violet-800">
-                        Upload up to 5 files, max 10MB each. If you already submitted, these files will replace the previous files.
+                        Unggah maksimal 5 file, masing-masing maksimal 10MB. Jika sudah mengumpulkan, file ini akan mengganti file sebelumnya.
                     </div>
 
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
-                        <p><span class="font-semibold text-slate-800">Open:</span> <span data-assignment-started-at>-</span></p>
-                        <p><span class="font-semibold text-slate-800">Close:</span> <span data-assignment-ended-at>-</span></p>
+                        <p><span class="font-semibold text-slate-800">Buka:</span> <span data-assignment-started-at>-</span></p>
+                        <p><span class="font-semibold text-slate-800">Tutup:</span> <span data-assignment-ended-at>-</span></p>
                     </div>
 
                     <label class="block">
-                        <span class="mb-2 block text-sm font-medium text-slate-700">Files</span>
+                        <span class="mb-2 block text-sm font-medium text-slate-700">File</span>
                         <input type="file" name="files[]" multiple required class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-violet-500 focus:bg-white">
                     </label>
 
                     <div class="flex justify-end gap-3">
-                        <button type="button" data-close-assignment-modal class="rounded-2xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">Cancel</button>
-                        <button type="submit" data-assignment-submit class="rounded-2xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:-translate-y-0.5 hover:bg-slate-800">Submit Assignment</button>
+                        <button type="button" data-close-assignment-modal class="rounded-2xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">Batal</button>
+                        <button type="submit" data-assignment-submit class="rounded-2xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:-translate-y-0.5 hover:bg-slate-800">Kumpulkan Tugas</button>
                     </div>
                 </form>
             </div>
@@ -322,7 +322,7 @@
                 document.querySelectorAll('[data-open-attendance-modal]').forEach((button) => {
                     button.addEventListener('click', () => {
                         form.action = button.dataset.action;
-                        title.textContent = button.dataset.title || 'Fill attendance';
+                        title.textContent = button.dataset.title || 'Isi presensi';
                         startedAt.textContent = button.dataset.startedAt || '-';
                         endedAt.textContent = button.dataset.endedAt || '-';
                         openModal();
@@ -362,10 +362,10 @@
                     button.addEventListener('click', () => {
                         form.reset();
                         form.action = button.dataset.action;
-                        title.textContent = button.dataset.title || 'Submit assignment';
+                        title.textContent = button.dataset.title || 'Kumpulkan tugas';
                         startedAt.textContent = button.dataset.startedAt || '-';
                         endedAt.textContent = button.dataset.endedAt || '-';
-                        submit.textContent = button.dataset.buttonLabel || 'Submit Assignment';
+                        submit.textContent = button.dataset.buttonLabel || 'Kumpulkan Tugas';
                         openModal();
                     });
                 });
