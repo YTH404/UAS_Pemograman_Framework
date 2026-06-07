@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Student\AssignmentController as StudentAssignmentController;
 use App\Http\Controllers\Student\AttendanceController as StudentAttendanceController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
+use App\Http\Controllers\Student\DoneMarkController as StudentDoneMarkController;
 use App\Http\Controllers\Teacher\AssignmentController as TeacherAssignmentController;
 use App\Http\Controllers\Teacher\AttendanceController as TeacherAttendanceController;
 use App\Http\Controllers\Teacher\DashboardController as TeacherDashboardController;
@@ -30,6 +31,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard/course/{course}', [StudentDashboardController::class, 'showCourse'])->name('student.course.show');
         Route::post('/dashboard/course/{course}/attendances/{attendance}', [StudentAttendanceController::class, 'fill'])->name('student.course.attendances.fill');
         Route::post('/dashboard/course/{course}/assignments/{assignment}', [StudentAssignmentController::class, 'submit'])->name('student.course.assignments.submit');
+        Route::patch('/dashboard/course/{course}/done-marks/{doneMark}', [StudentDoneMarkController::class, 'toggle'])->name('student.course.done-marks.toggle');
     });
 
     Route::middleware(['role:teacher'])->group(function () {

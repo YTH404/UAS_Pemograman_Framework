@@ -72,6 +72,11 @@ class Student extends Model
         return $this->hasMany(Submission::class, 'student_id');
     }
 
+    public function doneMarks(): HasMany
+    {
+        return $this->hasMany(DoneMark::class, 'student_id');
+    }
+
     protected function casts(): array
     {
         return [

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\AttendanceStudent;
 use App\Models\Course;
+use App\Models\DoneMark;
 use App\Models\StudentClass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -53,6 +54,8 @@ class AttendanceController extends Controller
             if ($attendanceRows !== []) {
                 AttendanceStudent::insert($attendanceRows);
             }
+
+            DoneMark::createForCourseStudents($course, DoneMark::ATTENDANCE, $attendance->id);
         });
 
         return redirect()->route('teacher.course.show', $course->id)->with('success', __('sweetalert.flash.attendance.created'));

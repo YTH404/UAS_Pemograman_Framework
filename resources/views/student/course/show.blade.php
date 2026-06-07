@@ -56,23 +56,6 @@
                             </div>
 
                             <div class="grid gap-4">
-                                @foreach ($meeting['items'] as $item)
-                                    <div class="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm">
-                                        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                                            <div>
-                                                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">{{ $item['type'] }}</p>
-                                                <a href="#" class="mt-2 inline-flex text-lg font-semibold text-slate-950 transition hover:text-sky-700">{{ $item['title'] }}</a>
-                                            </div>
-
-                                            @if ($item['done'])
-                                                <span class="inline-flex w-fit items-center rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">✓ Done</span>
-                                            @else
-                                                <button type="button" class="inline-flex w-fit items-center rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-sky-300 hover:bg-sky-50 hover:text-sky-700">Mark as Done</button>
-                                            @endif
-                                        </div>
-                                    </div>
-                                @endforeach
-
                                 @foreach ($meeting['assignments'] as $assignment)
                                     @php
                                         $assignmentStatusClass = match ($assignment['status']['variant']) {
@@ -105,24 +88,36 @@
                                                 @endif
                                             </div>
 
-                                            @if ($assignment['status']['can_submit'])
-                                                <button
-                                                    type="button"
-                                                    data-open-assignment-modal
-                                                    data-action="{{ $assignment['submit_url'] }}"
-                                                    data-title="{{ $assignment['title'] }}"
-                                                    data-started-at="{{ $assignment['started_at']?->format('d M Y H:i') ?? '-' }}"
-                                                    data-ended-at="{{ $assignment['ended_at']?->format('d M Y H:i') ?? '-' }}"
-                                                    data-button-label="{{ $assignment['status']['button_label'] }}"
-                                                    class="inline-flex w-fit items-center rounded-full px-4 py-2 text-sm font-semibold transition {{ $assignmentStatusClass }}"
-                                                >
-                                                    {{ $assignment['status']['button_label'] }}
-                                                </button>
-                                            @else
-                                                <span class="inline-flex w-fit items-center rounded-full px-4 py-2 text-sm font-semibold {{ $assignmentStatusClass }}">
-                                                    {{ $assignment['status']['label'] }}
-                                                </span>
-                                            @endif
+                                            <div class="flex flex-col items-start gap-2 sm:items-end">
+                                                @if ($assignment['status']['can_submit'])
+                                                    <button
+                                                        type="button"
+                                                        data-open-assignment-modal
+                                                        data-action="{{ $assignment['submit_url'] }}"
+                                                        data-title="{{ $assignment['title'] }}"
+                                                        data-started-at="{{ $assignment['started_at']?->format('d M Y H:i') ?? '-' }}"
+                                                        data-ended-at="{{ $assignment['ended_at']?->format('d M Y H:i') ?? '-' }}"
+                                                        data-button-label="{{ $assignment['status']['button_label'] }}"
+                                                        class="inline-flex w-fit items-center rounded-full px-4 py-2 text-sm font-semibold transition {{ $assignmentStatusClass }}"
+                                                    >
+                                                        {{ $assignment['status']['button_label'] }}
+                                                    </button>
+                                                @else
+                                                    <span class="inline-flex w-fit items-center rounded-full px-4 py-2 text-sm font-semibold {{ $assignmentStatusClass }}">
+                                                        {{ $assignment['status']['label'] }}
+                                                    </span>
+                                                @endif
+
+                                                @if ($assignment['done_mark']['toggle_url'])
+                                                    <form method="POST" action="{{ $assignment['done_mark']['toggle_url'] }}">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <button type="submit" class="inline-flex w-fit items-center rounded-full px-4 py-2 text-sm font-semibold transition {{ $assignment['done_mark']['is_done'] ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'border border-slate-300 bg-white text-slate-700 hover:border-violet-300 hover:bg-violet-50 hover:text-violet-700' }}">
+                                                            {{ $assignment['done_mark']['is_done'] ? '✓ Done' : 'Mark as Done' }}
+                                                        </button>
+                                                    </form>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
                                 @endforeach
@@ -148,28 +143,45 @@
                                                 </p>
                                             </div>
 
-                                            @if ($attendance['status']['can_fill'])
-                                                <button
-                                                    type="button"
-                                                    data-open-attendance-modal
-                                                    data-action="{{ $attendance['fill_url'] }}"
-                                                    data-title="{{ $attendance['title'] }}"
-                                                    data-started-at="{{ $attendance['started_at']?->format('d M Y H:i') ?? '-' }}"
-                                                    data-ended-at="{{ $attendance['ended_at']?->format('d M Y H:i') ?? '-' }}"
-                                                    class="inline-flex w-fit items-center rounded-full px-4 py-2 text-sm font-semibold transition {{ $statusClass }}"
-                                                >
-                                                    {{ $attendance['status']['label'] }}
-                                                </button>
-                                            @else
-                                                <span class="inline-flex w-fit items-center rounded-full px-4 py-2 text-sm font-semibold {{ $statusClass }}">
-                                                    {{ $attendance['status']['label'] }}
-                                                </span>
-                                            @endif
+                                            <div class="flex flex-col items-start gap-2 sm:items-end">
+                                                @if ($attendance['status']['can_fill'])
+                                                    <button
+                                                        type="button"
+                                                        data-open-attendance-modal
+                                                        data-action="{{ $attendance['fill_url'] }}"
+                                                        data-title="{{ $attendance['title'] }}"
+                                                        data-started-at="{{ $attendance['started_at']?->format('d M Y H:i') ?? '-' }}"
+                                                        data-ended-at="{{ $attendance['ended_at']?->format('d M Y H:i') ?? '-' }}"
+                                                        class="inline-flex w-fit items-center rounded-full px-4 py-2 text-sm font-semibold transition {{ $statusClass }}"
+                                                    >
+                                                        {{ $attendance['status']['label'] }}
+                                                    </button>
+                                                @else
+                                                    <span class="inline-flex w-fit items-center rounded-full px-4 py-2 text-sm font-semibold {{ $statusClass }}">
+                                                        {{ $attendance['status']['label'] }}
+                                                    </span>
+                                                @endif
+
+                                                @if ($attendance['done_mark']['toggle_url'])
+                                                    <form method="POST" action="{{ $attendance['done_mark']['toggle_url'] }}">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <button type="submit" class="inline-flex w-fit items-center rounded-full px-4 py-2 text-sm font-semibold transition {{ $attendance['done_mark']['is_done'] ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'border border-slate-300 bg-white text-slate-700 hover:border-sky-300 hover:bg-sky-50 hover:text-sky-700' }}">
+                                                            {{ $attendance['done_mark']['is_done'] ? '✓ Done' : 'Mark as Done' }}
+                                                        </button>
+                                                    </form>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
                                 @endforeach
 
-                                @foreach ($meeting['materials'] as $material)
+                                @foreach ($meeting['materials'] as $materialCard)
+                                    @php
+                                        $material = $materialCard['model'];
+                                        $doneMark = $materialCard['done_mark'];
+                                    @endphp
+
                                     <div class="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm">
                                         <div class="space-y-4">
                                             <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -188,7 +200,15 @@
                                                     @endif
                                                 </div>
 
-                                                <button type="button" class="inline-flex w-fit items-center rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-sky-300 hover:bg-sky-50 hover:text-sky-700">Mark as Done</button>
+                                                @if ($doneMark['toggle_url'])
+                                                    <form method="POST" action="{{ $doneMark['toggle_url'] }}">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <button type="submit" class="inline-flex w-fit items-center rounded-full px-4 py-2 text-sm font-semibold transition {{ $doneMark['is_done'] ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'border border-slate-300 bg-white text-slate-700 hover:border-sky-300 hover:bg-sky-50 hover:text-sky-700' }}">
+                                                            {{ $doneMark['is_done'] ? '✓ Done' : 'Mark as Done' }}
+                                                        </button>
+                                                    </form>
+                                                @endif
                                             </div>
 
                                             @if ($material->youtubeEmbedUrl())

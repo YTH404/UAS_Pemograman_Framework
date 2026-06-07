@@ -103,5 +103,10 @@ return [
             'not_open' => 'This assignment is not open yet.',
             'closed' => 'This assignment has already closed.',
         ],
+
+        'done_mark' => [
+            'marked' => 'Activity has been marked as done.',
+            'unmarked' => 'Activity has been marked as not done.',
+        ],
     ],
 ];

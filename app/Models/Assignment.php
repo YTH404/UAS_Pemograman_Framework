@@ -27,6 +27,11 @@ class Assignment extends Model
         return $this->hasMany(Submission::class, 'assignment_id');
     }
 
+    public function doneMarks(): HasMany
+    {
+        return $this->hasMany(DoneMark::class, 'assignment_id');
+    }
+
     public function hasStarted(): bool
     {
         return $this->started_at === null || $this->started_at->lte(now());

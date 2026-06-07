@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
 use App\Models\Course;
+use App\Models\DoneMark;
 use App\Models\LearningMaterial;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
@@ -29,7 +31,10 @@ class LearningMaterialController extends Controller
             $validatedData['file_path'] = $request->file('file_path')->store('learning-materials', 'public');
         }
 
-        $course->learningMaterials()->create($this->normalizeMaterialData($validatedData));
+        DB::transaction(function () use ($course, $validatedData) {
+            $material = $course->learningMaterials()->create($this->normalizeMaterialData($validatedData));
+            DoneMark::createForCourseStudents($course, DoneMark::LEARNING_MATERIAL, $material->id);
+        });
 
         return redirect()->route('teacher.course.show', $course->id)->with('success', __('sweetalert.flash.material.created'));
     }
@@ -60,6 +65,7 @@ class LearningMaterialController extends Controller
         $material = $this->findMaterialForCourse($course, $material);
 
         $this->deleteDocumentFile($material);
+        $material->doneMarks()->delete();
         $material->delete();
 
         return redirect()->route('teacher.course.show', $course->id)->with('success', __('sweetalert.flash.material.deleted'));

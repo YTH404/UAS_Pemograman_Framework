@@ -151,7 +151,6 @@
                                         </div>
                                     </div>
 
-                                    <p class="mt-5 text-sm font-semibold text-sky-700">Open course</p>
                                 </div>
                             </a>
                         @empty

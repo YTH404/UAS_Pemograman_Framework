@@ -220,7 +220,7 @@
                         </select>
                     </label>
 
-                    <div class="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800" data-activity-help></div>
+                    {{-- <div class="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800" data-activity-help></div> --}}
 
                     <div class="grid gap-5" data-activity-fields></div>
 
@@ -393,13 +393,13 @@
                     const isAssignmentEdit = mode === 'edit' && typeSelect.value === 'submission';
                     form.action = isMaterialEdit ? currentMaterial.action : isAttendanceEdit ? currentAttendance.action : isAssignmentEdit ? currentAssignment.action : config.action;
                     setMethod(isMaterialEdit || isAttendanceEdit || isAssignmentEdit ? 'PUT' : null);
-                    help.textContent = isMaterialEdit
-                        ? 'Update this learning material. Upload a document only if you want to replace the current file.'
-                        : isAttendanceEdit
-                            ? 'Update this attendance window. Students who already filled it will keep their submitted status.'
-                            : isAssignmentEdit
-                                ? 'Update this assignment window. Students who already submitted can still replace files before the close time.'
-                            : config.help;
+                    // help.textContent = isMaterialEdit
+                    //     ? 'Update this learning material. Upload a document only if you want to replace the current file.'
+                    //     : isAttendanceEdit
+                    //         ? 'Update this attendance window. Students who already filled it will keep their submitted status.'
+                    //         : isAssignmentEdit
+                    //             ? 'Update this assignment window. Students who already submitted can still replace files before the close time.'
+                    //         : config.help;
                     submit.textContent = isMaterialEdit ? 'Update Material' : isAttendanceEdit ? 'Update Attendance' : isAssignmentEdit ? 'Update Assignment' : config.submit;
                     modalTitle.textContent = isMaterialEdit ? 'Edit material' : isAttendanceEdit ? 'Edit attendance' : isAssignmentEdit ? 'Edit assignment' : 'Add course activity';
                     fields.innerHTML = typeof config.fields === 'function' ? config.fields() : config.fields;

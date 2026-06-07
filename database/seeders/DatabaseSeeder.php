@@ -17,25 +17,15 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Fachrizal',
-            'username' => 'admin',
-            'password' => bcrypt('password'),
-            'role' => 'admin',
-        ]);
+        User::query()->updateOrCreate(
+            ['username' => 'admin'],
+            [
+                'name' => 'Fachrizal',
+                'password' => bcrypt('password'),
+                'role' => 'admin',
+            ]
+        );
 
-        User::factory()->create([
-            'name' => 'Alviano',
-            'username' => 'teacher',
-            'password' => bcrypt('password'),
-            'role' => 'teacher',
-        ]);
-
-        User::factory()->create([
-            'name' => 'Yesaya',
-            'username' => 'student',
-            'password' => bcrypt('password'),
-            'role' => 'student',
-        ]);
+        $this->call(NumericStudentSeeder::class);
     }
 }

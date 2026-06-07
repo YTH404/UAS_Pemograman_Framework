@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
 use App\Models\Course;
+use App\Models\DoneMark;
 use App\Models\Student;
 use App\Models\Submission;
 use Illuminate\Http\Request;
@@ -50,7 +51,7 @@ class AssignmentController extends Controller
             ->all();
 
         try {
-            DB::transaction(function () use ($submission, $uploadedFiles) {
+            DB::transaction(function () use ($submission, $uploadedFiles, $assignment) {
                 $submission->load('files');
 
                 foreach ($submission->files as $file) {
@@ -60,6 +61,7 @@ class AssignmentController extends Controller
                 $submission->files()->delete();
                 $submission->update(['submitted_at' => now()]);
                 $submission->files()->createMany($uploadedFiles);
+                DoneMark::markDone($submission->student_id, DoneMark::ASSIGNMENT, $assignment->id);
             });
         } catch (\Throwable $exception) {
             foreach ($uploadedFiles as $file) {

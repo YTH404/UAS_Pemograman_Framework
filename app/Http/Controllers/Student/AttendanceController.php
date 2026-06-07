@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
 use App\Models\Course;
+use App\Models\DoneMark;
 use App\Models\Student;
 use Illuminate\Http\Request;
 
@@ -41,6 +42,7 @@ class AttendanceController extends Controller
             'status' => 'present',
             'filled_at' => now(),
         ]);
+        DoneMark::markDone($student->id, DoneMark::ATTENDANCE, $attendance->id);
 
         return redirect()->route('student.course.show', $course->id)->with('success', __('sweetalert.flash.attendance.filled'));
     }

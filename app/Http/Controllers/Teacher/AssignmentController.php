@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Teacher;
 use App\Http\Controllers\Controller;
 use App\Models\Assignment;
 use App\Models\Course;
+use App\Models\DoneMark;
 use App\Models\StudentClass;
 use App\Models\Submission;
 use Illuminate\Http\Request;
@@ -45,6 +46,8 @@ class AssignmentController extends Controller
             if ($submissionRows !== []) {
                 Submission::insert($submissionRows);
             }
+
+            DoneMark::createForCourseStudents($course, DoneMark::ASSIGNMENT, $assignment->id);
         });
 
         return redirect()->route('teacher.course.show', $course->id)->with('success', __('sweetalert.flash.assignment.created'));
