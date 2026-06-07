@@ -89,6 +89,9 @@
                                                 <span class="inline-flex w-fit items-center rounded-full bg-white px-4 py-2 text-sm font-semibold text-violet-700 shadow-sm">
                                                     {{ $assignment['submitted_count'] }}/{{ $assignment['total_count'] }} submitted
                                                 </span>
+                                                <span class="inline-flex w-fit items-center rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm">
+                                                    {{ $assignment['graded_count'] }}/{{ $assignment['total_count'] }} graded
+                                                </span>
                                                 <button
                                                     type="button"
                                                     data-edit-assignment-modal
@@ -102,6 +105,9 @@
                                                 >
                                                     Edit
                                                 </button>
+                                                <a href="{{ $assignment['grade_url'] }}" class="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800">
+                                                    Grade
+                                                </a>
                                             </div>
                                         </div>
                                     </div>

@@ -146,7 +146,9 @@ class DashboardController extends Controller
                 'started_at' => $assignment->started_at,
                 'ended_at' => $assignment->ended_at,
                 'update_url' => route('teacher.course.assignments.update', [$courseId, $assignment->id]),
+                'grade_url' => route('teacher.course.assignments.grades.index', [$courseId, $assignment->id]),
                 'submitted_count' => $assignment->submissions->filter(fn ($submission) => $submission->submitted_at !== null)->count(),
+                'graded_count' => $assignment->submissions->filter(fn ($submission) => $submission->grade !== null)->count(),
                 'total_count' => $assignment->submissions->count(),
             ])
             ->values();

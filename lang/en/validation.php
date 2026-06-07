@@ -6,12 +6,15 @@ return [
     'confirmed' => 'The :attribute confirmation does not match.',
     'date' => 'The :attribute must be a valid date.',
     'email' => 'The :attribute must be a valid email address.',
+    'integer' => 'The :attribute must be a whole number.',
     'max' => [
         'array' => 'The :attribute must not have more than :max items.',
         'file' => 'The :attribute must not be greater than :max kilobytes.',
+        'numeric' => 'The :attribute must not be greater than :max.',
         'string' => 'The :attribute must not be greater than :max characters.',
     ],
     'min' => [
+        'numeric' => 'The :attribute must be at least :min.',
         'string' => 'The :attribute must be at least :min characters.',
     ],
     'required' => 'The :attribute field is required.',
@@ -32,6 +35,7 @@ return [
         'file_path' => 'document file',
         'files' => 'submission files',
         'files.*' => 'submission file',
+        'grade' => 'grade',
         'login' => 'username',
         'material_type' => 'material type',
         'meeting' => 'meeting',

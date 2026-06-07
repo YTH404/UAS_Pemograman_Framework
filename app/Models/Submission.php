@@ -12,6 +12,7 @@ class Submission extends Model
         'assignment_id',
         'student_id',
         'submitted_at',
+        'grade',
     ];
 
     public function assignment(): BelongsTo
@@ -33,6 +34,7 @@ class Submission extends Model
     {
         return [
             'submitted_at' => 'datetime',
+            'grade' => 'integer',
         ];
     }
 }

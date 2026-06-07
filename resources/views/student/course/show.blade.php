@@ -86,6 +86,12 @@
                                                         @endforeach
                                                     </div>
                                                 @endif
+
+                                                @if ($assignment['submitted_at'] !== null)
+                                                    <p class="mt-3 text-sm font-semibold text-violet-700">
+                                                        {{ $assignment['grade'] !== null ? 'Grade: ' . $assignment['grade'] . '/100' : 'Not graded yet' }}
+                                                    </p>
+                                                @endif
                                             </div>
 
                                             <div class="flex flex-col items-start gap-2 sm:items-end">

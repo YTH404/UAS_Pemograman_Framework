@@ -104,6 +104,11 @@ return [
             'closed' => 'This assignment has already closed.',
         ],
 
+        'grade' => [
+            'updated' => 'Submission grade has been saved.',
+            'missing_submission' => 'This student has not submitted the assignment yet.',
+        ],
+
         'done_mark' => [
             'marked' => 'Activity has been marked as done.',
             'unmarked' => 'Activity has been marked as not done.',

@@ -238,6 +238,8 @@ class DashboardController extends Controller
                     'status' => $status,
                     'submit_url' => route('student.course.assignments.submit', [$courseId, $assignment->id]),
                     'done_mark' => $this->doneMarkPayload($doneMarks, DoneMark::ASSIGNMENT, $assignment->id, $courseId),
+                    'submitted_at' => $submission?->submitted_at,
+                    'grade' => $submission?->grade,
                     'files' => $submission?->files?->map(fn ($file) => [
                             'name' => $file->original_name,
                             'url' => $file->fileUrl(),

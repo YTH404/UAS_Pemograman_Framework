@@ -11,6 +11,7 @@ use App\Http\Controllers\Student\AttendanceController as StudentAttendanceContro
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
 use App\Http\Controllers\Student\DoneMarkController as StudentDoneMarkController;
 use App\Http\Controllers\Teacher\AssignmentController as TeacherAssignmentController;
+use App\Http\Controllers\Teacher\AssignmentGradeController as TeacherAssignmentGradeController;
 use App\Http\Controllers\Teacher\AttendanceController as TeacherAttendanceController;
 use App\Http\Controllers\Teacher\DashboardController as TeacherDashboardController;
 use App\Http\Controllers\Teacher\LearningMaterialController;
@@ -41,6 +42,8 @@ Route::middleware('auth')->group(function () {
         Route::put('/dashboard-teacher/course/{course}/attendances/{attendance}', [TeacherAttendanceController::class, 'update'])->name('teacher.course.attendances.update');
         Route::post('/dashboard-teacher/course/{course}/assignments', [TeacherAssignmentController::class, 'store'])->name('teacher.course.assignments.store');
         Route::put('/dashboard-teacher/course/{course}/assignments/{assignment}', [TeacherAssignmentController::class, 'update'])->name('teacher.course.assignments.update');
+        Route::get('/dashboard-teacher/course/{course}/assignments/{assignment}/grades', [TeacherAssignmentGradeController::class, 'index'])->name('teacher.course.assignments.grades.index');
+        Route::patch('/dashboard-teacher/course/{course}/assignments/{assignment}/submissions/{submission}/grade', [TeacherAssignmentGradeController::class, 'update'])->name('teacher.course.assignments.submissions.grade');
         Route::post('/dashboard-teacher/course/{course}/materials', [LearningMaterialController::class, 'store'])->name('teacher.course.materials.store');
         Route::put('/dashboard-teacher/course/{course}/materials/{material}', [LearningMaterialController::class, 'update'])->name('teacher.course.materials.update');
         Route::delete('/dashboard-teacher/course/{course}/materials/{material}', [LearningMaterialController::class, 'destroy'])->name('teacher.course.materials.destroy');
