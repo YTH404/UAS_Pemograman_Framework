@@ -9,6 +9,7 @@ use App\Models\DoneMark;
 use App\Models\StudentClass;
 use App\Models\Submission;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 
 class AssignmentController extends Controller
@@ -21,11 +22,27 @@ class AssignmentController extends Controller
         $validatedData = $this->validateAssignment($request);
         $validatedData['meeting'] = $this->normalizeMeetingTitle($validatedData['meeting']);
 
+        if (! $course->gradeWeights) {
+            return redirect()
+                ->route('teacher.course.show', $course->id)
+                ->withInput()
+                ->with('error', 'Set and lock grade weights before creating assignments.');
+        }
+
         if (! $this->canCreateInMeeting($course, $validatedData['meeting'])) {
             return redirect()
                 ->route('teacher.course.show', $course->id)
                 ->withInput()
                 ->with('error', __('sweetalert.flash.assignment.meeting_locked'));
+        }
+
+        $assignmentTypeError = $this->assignmentTypeError($course, $validatedData['assignment_type'], $validatedData['meeting']);
+
+        if ($assignmentTypeError) {
+            return redirect()
+                ->route('teacher.course.show', $course->id)
+                ->withInput()
+                ->with('error', $assignmentTypeError);
         }
 
         DB::transaction(function () use ($course, $validatedData) {
@@ -57,7 +74,7 @@ class AssignmentController extends Controller
     {
         $course = $this->findTeacherCourse($request, $course);
         $assignment = $this->findAssignmentForCourse($course, $assignment);
-        $validatedData = $this->validateAssignment($request);
+        $validatedData = $this->validateAssignment($request, true);
         unset($validatedData['meeting']);
 
         $assignment->update($validatedData);
@@ -65,20 +82,28 @@ class AssignmentController extends Controller
         return redirect()->route('teacher.course.show', $course->id)->with('success', __('sweetalert.flash.assignment.updated'));
     }
 
-    private function validateAssignment(Request $request): array
+    private function validateAssignment(Request $request, bool $isUpdate = false): array
     {
-        return $request->validate([
+        $rules = [
             'meeting' => 'required|string|max:255',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'started_at' => 'required|date',
             'ended_at' => 'required|date|after:started_at',
-        ]);
+        ];
+
+        if (! $isUpdate) {
+            $rules['assignment_type'] = ['required', Rule::in(Assignment::types())];
+        }
+
+        return $request->validate($rules);
     }
 
     private function findTeacherCourse(Request $request, string $course): Course
     {
-        return Course::where('teacher_id', $request->user()->id)->findOrFail($course);
+        return Course::with('gradeWeights')
+            ->where('teacher_id', $request->user()->id)
+            ->findOrFail($course);
     }
 
     private function findAssignmentForCourse(Course $course, string $assignment): Assignment
@@ -95,6 +120,28 @@ class AssignmentController extends Controller
         }
 
         return in_array($meetingNumber, $this->unlockedMeetings($course), true);
+    }
+
+    private function assignmentTypeError(Course $course, string $assignmentType, string $meeting): ?string
+    {
+        $meetingNumber = $this->meetingNumber($meeting);
+
+        if ($assignmentType === Assignment::TYPE_UTS && $meetingNumber !== 8) {
+            return 'UTS can only be created in Pertemuan 8.';
+        }
+
+        if ($assignmentType === Assignment::TYPE_UAS && $meetingNumber !== 16) {
+            return 'UAS can only be created in Pertemuan 16.';
+        }
+
+        if (
+            in_array($assignmentType, [Assignment::TYPE_UTS, Assignment::TYPE_UAS], true)
+            && $course->assignments()->where('assignment_type', $assignmentType)->exists()
+        ) {
+            return strtoupper($assignmentType) . ' has already been created for this course.';
+        }
+
+        return null;
     }
 
     private function unlockedMeetings(Course $course): array

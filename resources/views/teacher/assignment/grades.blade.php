@@ -39,7 +39,7 @@
 
             <main class="mx-auto flex w-full max-w-7xl flex-col gap-8 px-6 pb-16 pt-2 lg:px-8 lg:pb-24">
                 <section class="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/70 lg:p-10">
-                    <p class="text-sm font-semibold uppercase tracking-[0.22em] text-violet-700">{{ $assignment->meeting }}</p>
+                    <p class="text-sm font-semibold uppercase tracking-[0.22em] text-violet-700">{{ $assignment->meeting }} · {{ $assignment->typeLabel() }}</p>
                     <h1 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950 lg:text-4xl">{{ $assignment->title }}</h1>
                     <p class="mt-3 text-sm leading-6 text-slate-600">{{ $courseTitle }}</p>
 

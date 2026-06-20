@@ -98,7 +98,10 @@
                                             <span class="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-sky-200">{{ $assignment['due'] }}</span>
                                         </div>
                                         <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
-                                            <span class="rounded-full bg-sky-400/10 px-3 py-1 text-xs font-semibold text-sky-200">{{ $assignment['type'] }}</span>
+                                            <div class="flex flex-wrap gap-2">
+                                                <span class="rounded-full bg-violet-400/10 px-3 py-1 text-xs font-semibold text-violet-200">{{ $assignment['assignment_type'] }}</span>
+                                                <span class="rounded-full bg-sky-400/10 px-3 py-1 text-xs font-semibold text-sky-200">{{ $assignment['type'] }}</span>
+                                            </div>
                                             <a href="{{ route('student.course.show', $assignment['course_id']) }}" class="text-sm font-semibold text-white underline decoration-white/20 underline-offset-4 transition hover:decoration-white">
                                                 Open courses
                                             </a>

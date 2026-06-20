@@ -6,6 +6,7 @@ use App\Models\Classes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Course extends Model
@@ -41,5 +42,10 @@ class Course extends Model
     public function assignments(): HasMany
     {
         return $this->hasMany(Assignment::class, 'course_id');
+    }
+
+    public function gradeWeights(): HasOne
+    {
+        return $this->hasOne(CourseGradeWeight::class, 'course_id');
     }
 }

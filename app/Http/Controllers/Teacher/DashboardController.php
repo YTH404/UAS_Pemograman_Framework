@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
+use App\Models\Assignment;
 use App\Models\Course;
+use App\Models\CourseGradeWeight;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -41,12 +43,14 @@ class DashboardController extends Controller
     public function showCourse(Request $request, string $course)
     {
         $teacher = $request->user();
-        $course = Course::with(['classes', 'learningMaterials', 'attendances.attendanceStudents', 'assignments.submissions.files'])
+        $course = Course::with(['classes', 'gradeWeights', 'learningMaterials', 'attendances.attendanceStudents', 'assignments.submissions.files'])
             ->where('teacher_id', $teacher->id)
             ->findOrFail($course);
         $meetings = $this->buildMeetings($course);
+        $assignmentTypeOptions = Assignment::typeOptions();
+        $gradeWeightLabels = CourseGradeWeight::labels();
 
-        return view('teacher.course.show', compact('teacher', 'course', 'meetings'));
+        return view('teacher.course.show', compact('teacher', 'course', 'meetings', 'assignmentTypeOptions', 'gradeWeightLabels'));
     }
 
     private function buildMeetings(Course $course): array
@@ -141,6 +145,8 @@ class DashboardController extends Controller
         return $assignments
             ->map(fn ($assignment) => [
                 'id' => $assignment->id,
+                'assignment_type' => $assignment->assignment_type,
+                'assignment_type_label' => $assignment->typeLabel(),
                 'title' => $assignment->title,
                 'description' => $assignment->description,
                 'started_at' => $assignment->started_at,

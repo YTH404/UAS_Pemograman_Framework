@@ -8,14 +8,45 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Assignment extends Model
 {
+    public const TYPE_TUGAS = 'tugas';
+    public const TYPE_QUIZ = 'quiz';
+    public const TYPE_UTS = 'uts';
+    public const TYPE_UAS = 'uas';
+
     protected $fillable = [
         'course_id',
         'meeting',
+        'assignment_type',
         'title',
         'description',
         'started_at',
         'ended_at',
     ];
+
+    public static function types(): array
+    {
+        return [
+            self::TYPE_TUGAS,
+            self::TYPE_QUIZ,
+            self::TYPE_UTS,
+            self::TYPE_UAS,
+        ];
+    }
+
+    public static function typeOptions(): array
+    {
+        return [
+            self::TYPE_TUGAS => 'Tugas',
+            self::TYPE_QUIZ => 'Quiz',
+            self::TYPE_UTS => 'UTS',
+            self::TYPE_UAS => 'UAS',
+        ];
+    }
+
+    public function typeLabel(): string
+    {
+        return self::typeOptions()[$this->assignment_type] ?? 'Tugas';
+    }
 
     public function course(): BelongsTo
     {

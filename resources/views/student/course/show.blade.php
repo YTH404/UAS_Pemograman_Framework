@@ -69,7 +69,7 @@
                                     <div class="rounded-[1.5rem] border border-violet-200 bg-violet-50/70 p-5 shadow-sm">
                                         <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                                             <div>
-                                                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-violet-700">Assignment</p>
+                                                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-violet-700">Assignment · {{ $assignment['assignment_type_label'] }}</p>
                                                 <h3 class="mt-2 text-lg font-semibold text-slate-950">{{ $assignment['title'] }}</h3>
                                                 @if ($assignment['description'])
                                                     <p class="mt-2 text-sm leading-6 text-slate-600">{{ $assignment['description'] }}</p>

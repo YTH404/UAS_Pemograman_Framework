@@ -231,6 +231,8 @@ class DashboardController extends Controller
 
                 return [
                     'id' => $assignment->id,
+                    'assignment_type' => $assignment->assignment_type,
+                    'assignment_type_label' => $assignment->typeLabel(),
                     'title' => $assignment->title,
                     'description' => $assignment->description,
                     'started_at' => $assignment->started_at,
@@ -316,6 +318,7 @@ class DashboardController extends Controller
                     'course' => $assignment->course?->course_name ?? 'Unknown course',
                     'task' => $assignment->title,
                     'due' => $assignment->ended_at?->format('d M Y · H:i') ?? 'No deadline',
+                    'assignment_type' => $assignment->typeLabel(),
                     'type' => $submission?->submitted_at ? 'Submitted' : $status['label'],
                     'status' => $status,
                 ];

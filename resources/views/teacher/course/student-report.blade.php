@@ -185,6 +185,7 @@
                                     <thead class="bg-slate-50 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
                                         <tr>
                                             <th scope="col" class="px-6 py-4">Assignment</th>
+                                            <th scope="col" class="px-6 py-4">Type</th>
                                             <th scope="col" class="px-6 py-4">Opens</th>
                                             <th scope="col" class="px-6 py-4">Closes</th>
                                             <th scope="col" class="px-6 py-4">Submitted</th>
@@ -207,6 +208,7 @@
                                                     <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">{{ $assignment->meeting }}</p>
                                                     <p class="mt-1 font-semibold text-slate-950">{{ $assignment->title }}</p>
                                                 </td>
+                                                <td class="whitespace-nowrap px-6 py-4 align-top text-slate-600">{{ $assignment->typeLabel() }}</td>
                                                 <td class="whitespace-nowrap px-6 py-4 align-top text-slate-600">{{ $formatDate($assignment->started_at) }}</td>
                                                 <td class="whitespace-nowrap px-6 py-4 align-top text-slate-600">{{ $formatDate($assignment->ended_at) }}</td>
                                                 <td class="whitespace-nowrap px-6 py-4 align-top text-slate-600">{{ $formatDate($submission?->submitted_at) }}</td>
@@ -232,7 +234,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="7" class="px-6 py-6 text-sm text-slate-500">No assignments have been created for this course.</td>
+                                                <td colspan="8" class="px-6 py-6 text-sm text-slate-500">No assignments have been created for this course.</td>
                                             </tr>
                                         @endforelse
                                     </tbody>
