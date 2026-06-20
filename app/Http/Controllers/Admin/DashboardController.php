@@ -27,17 +27,17 @@ class DashboardController extends Controller
         $learningMaterialCount = LearningMaterial::count();
 
         $dashboardStats = [
-            ['label' => 'Total Dosen', 'value' => $teacherCount, 'note' => 'Akun dosen aktif'],
-            ['label' => 'Total Kelas', 'value' => $classCount, 'note' => 'Kelompok belajar aktif'],
-            ['label' => 'Total Mahasiswa', 'value' => $studentCount, 'note' => 'Akun mahasiswa terdaftar'],
-            ['label' => 'Total Mata Kuliah', 'value' => $courseCount, 'note' => 'Mata kuliah yang terhubung ke kelas'],
+            ['label' => 'Total Teacher', 'value' => $teacherCount, 'note' => 'Active teacher accounts'],
+            ['label' => 'Total Class', 'value' => $classCount, 'note' => 'Active class groups'],
+            ['label' => 'Total Students', 'value' => $studentCount, 'note' => 'Registered student accounts'],
+            ['label' => 'Total Courses', 'value' => $courseCount, 'note' => 'Courses connected to classes'],
         ];
 
         $activityStats = [
-            ['label' => 'Materi', 'value' => $learningMaterialCount, 'note' => 'Dokumen, video, dan tautan yang diunggah'],
-            ['label' => 'Tugas', 'value' => $assignmentCount, 'note' => 'Jadwal tugas yang dibuat dosen'],
-            ['label' => 'Presensi', 'value' => $attendanceCount, 'note' => 'Sesi presensi yang dibuat dosen'],
-            ['label' => 'File Terkumpul', 'value' => $submissionCount . '/' . $totalSubmissionSlots, 'note' => 'Slot pengumpulan tugas yang sudah dikirim'],
+            ['label' => 'Material', 'value' => $learningMaterialCount, 'note' => 'Uploaded documents, videos, and links'],
+            ['label' => 'Assignment', 'value' => $assignmentCount, 'note' => 'Assignment schedules created by teachers'],
+            ['label' => 'Attendance', 'value' => $attendanceCount, 'note' => 'Attendance sessions created by teachers'],
+            ['label' => 'File Submitted', 'value' => $submissionCount . '/' . $totalSubmissionSlots, 'note' => 'Submitted assignment slots'],
         ];
 
         $recentCourses = Course::with(['classes', 'teacher'])

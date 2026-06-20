@@ -30,16 +30,16 @@
                         @endif
 
                         <label class="block">
-                            <span class="mb-2 block text-sm font-medium text-slate-700">Nama pengguna</span>
-                            <input type="text" name="login" value="{{ old('login') }}" placeholder="Nama pengguna Anda" required autofocus class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-500 focus:bg-white" />
+                            <span class="mb-2 block text-sm font-medium text-slate-700">Username</span>
+                            <input type="text" name="login" value="{{ old('login') }}" placeholder="Your username" required autofocus class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-500 focus:bg-white" />
                             @error('login')
                                 <span class="mt-2 block text-xs text-rose-600">{{ $message }}</span>
                             @enderror
                         </label>
 
                         <label class="block">
-                            <span class="mb-2 block text-sm font-medium text-slate-700">Kata sandi</span>
-                            <input type="password" name="password" required placeholder="Kata sandi Anda" class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-500 focus:bg-white" />
+                            <span class="mb-2 block text-sm font-medium text-slate-700">Password</span>
+                            <input type="password" name="password" required placeholder="Your password" class="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-500 focus:bg-white" />
                             @error('password')
                                 <span class="mt-2 block text-xs text-rose-600">{{ $message }}</span>
                             @enderror
@@ -48,19 +48,19 @@
                         <div class="flex items-center justify-between text-sm text-slate-600">
                             <label class="inline-flex items-center gap-2">
                                 <input type="checkbox" name="remember" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500" />
-                                Ingat saya
+                                Remember me
                             </label>
                         </div>
 
                         <button type="submit" class="inline-flex w-full items-center justify-center rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:-translate-y-0.5 hover:bg-slate-800">
-                            Lanjut
+                            Continue
                         </button>
                     </form>
 
                     <div class="mt-6 rounded-3xl bg-slate-50 p-5 ring-1 ring-slate-200">
-                        <p class="text-sm font-medium text-slate-900">Butuh bantuan cepat?</p>
+                        <p class="text-sm font-medium text-slate-900">Need quick help?</p>
                         <p class="mt-2 text-sm leading-6 text-slate-600">
-                            Email support@campuslms.ac.id atau hubungi +62 812 3456 7890 untuk bantuan akun.
+                            Email support@campuslms.ac.id or contact +62 812 3456 7890 for account help.
                         </p>
                     </div>
                 </section>

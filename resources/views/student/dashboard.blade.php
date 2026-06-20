@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>{{ config('app.name', 'Campus LMS') }} | Beranda Mahasiswa</title>
+        <title>{{ config('app.name', 'Campus LMS') }} | Student Dashboard</title>
 
         @fonts
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -32,7 +32,7 @@
                 <a href="{{ url('/') }}" class="group inline-flex items-center gap-3">
                     <span class="grid h-11 w-11 place-items-center rounded-2xl bg-slate-900 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition-transform duration-200 group-hover:-translate-y-0.5">LMS</span>
                     <span>
-                        <span class="block text-lg font-semibold text-slate-900">Beranda</span>
+                        <span class="block text-lg font-semibold text-slate-900">Dashboard</span>
                     </span>
                 </a>
 
@@ -42,7 +42,7 @@
                         <div class="text-right">
                             <p class="text-sm font-semibold text-slate-900">
                                 {{ $student?->name ?? auth()->user()->name }}
-                                <span class="font-medium text-slate-500">- {{ $class?->class_name ?? 'Belum ada kelas' }}</span>
+                                <span class="font-medium text-slate-500">- {{ $class?->class_name ?? 'No class yet' }}</span>
                             </p>
                         </div>
                     </div>
@@ -61,21 +61,21 @@
                     <article class="overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/70 lg:p-10">
                             <div class="flex items-center justify-between gap-4">
                                 <div>
-                                    <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Ruang belajar untuk mata kuliah, progres, dan tenggat.</h2>
+                                    <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Learning space for courses, progress, and deadlines.</h2>
                                 </div>
                             </div>
 
                             <div class="mt-8 grid gap-4 lg:grid-cols-2">
                                 <div class="rounded-3xl bg-slate-950 p-5 text-white shadow-sm ring-1 ring-white/10">
-                                    <p class="text-sm font-semibold uppercase tracking-[0.2em] text-sky-300">Total mata kuliah diikuti</p>
+                                    <p class="text-sm font-semibold uppercase tracking-[0.2em] text-sky-300">Total enrolled courses</p>
                                     <p class="mt-4 text-4xl font-semibold">{{ count($courseSummary) }}</p>
-                                    <p class="mt-3 text-sm leading-6 text-slate-300">Mata kuliah aktif yang diikuti semester ini.</p>
+                                    <p class="mt-3 text-sm leading-6 text-slate-300">Active courses enrolled this semester.</p>
                                 </div>
 
                                 <div class="rounded-3xl bg-slate-950 p-5 text-white shadow-sm ring-1 ring-white/10">
-                                    <p class="text-sm font-semibold uppercase tracking-[0.2em] text-sky-300">Total tugas mendatang</p>
+                                    <p class="text-sm font-semibold uppercase tracking-[0.2em] text-sky-300">Total upcoming assignments</p>
                                     <p class="mt-4 text-4xl font-semibold">{{ $upcomingAssignments->count() }}</p>
-                                    <p class="mt-3 text-sm leading-6 text-slate-300">Jadwal tugas yang sedang dibuka atau akan datang dari mata kuliah Anda.</p>
+                                    <p class="mt-3 text-sm leading-6 text-slate-300">Assignment schedules that are open now or upcoming from your courses.</p>
                                 </div>
                             </div>
                         </article>
@@ -83,7 +83,7 @@
                     <article class="overflow-hidden rounded-[2rem] bg-slate-950 p-8 text-white shadow-2xl shadow-slate-900/20 lg:p-10">
                             <div class="flex items-center justify-between gap-4">
                                 <div>
-                                    <p class="text-sm font-semibold uppercase tracking-[0.22em] text-sky-300">Tugas Mendatang</p>
+                                    <p class="text-sm font-semibold uppercase tracking-[0.22em] text-sky-300">Upcoming Assignments</p>
                                 </div>
                             </div>
 
@@ -100,13 +100,13 @@
                                         <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
                                             <span class="rounded-full bg-sky-400/10 px-3 py-1 text-xs font-semibold text-sky-200">{{ $assignment['type'] }}</span>
                                             <a href="{{ route('student.course.show', $assignment['course_id']) }}" class="text-sm font-semibold text-white underline decoration-white/20 underline-offset-4 transition hover:decoration-white">
-                                                Buka mata kuliah
+                                                Open courses
                                             </a>
                                         </div>
                                     </div>
                                 @empty
                                     <div class="rounded-3xl border border-white/10 bg-white/5 p-5 text-sm leading-6 text-slate-300">
-                                        Tidak ada tugas yang sedang dibuka atau mendatang sekarang. Sedikit kemenangan, nih.
+                                        No assignments are currently open or upcoming. A small win for now.
                                     </div>
                                 @endforelse
                             </div>
@@ -115,7 +115,7 @@
 
                 <div class="flex items-center gap-4">
                     <div class="h-px flex-1 bg-gradient-to-r from-transparent via-slate-300 to-transparent"></div>
-                    <span class="text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">Mata Kuliah Diikuti</span>
+                    <span class="text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">Enrolled Courses</span>
                     <div class="h-px flex-1 bg-gradient-to-r from-transparent via-slate-300 to-transparent"></div>
                 </div>
 
@@ -132,14 +132,14 @@
 
                                 <div class="relative">
                                     <h3 class="text-xl font-semibold text-slate-950">{{ $course['name'] }}</h3>
-                                    <p class="mt-2 text-sm text-slate-600">Dosen: {{ $course['teacher'] }}</p>
+                                    <p class="mt-2 text-sm text-slate-600">Teacher: {{ $course['teacher'] }}</p>
                                     <p class="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{{ $course['class_code'] }}</p>
-                                    <p class="mt-4 text-sm text-slate-600">Tenggat berikutnya: <span class="font-semibold text-slate-900">{{ $course['deadline'] }}</span></p>
-                                    <p class="mt-1 text-sm text-slate-600">Tugas: <span class="font-semibold text-slate-900">{{ $course['assignment_total'] }}</span></p>
+                                    <p class="mt-4 text-sm text-slate-600">Next deadline: <span class="font-semibold text-slate-900">{{ $course['deadline'] }}</span></p>
+                                    <p class="mt-1 text-sm text-slate-600">Assignment: <span class="font-semibold text-slate-900">{{ $course['assignment_total'] }}</span></p>
 
                                     <div class="mt-6 space-y-3">
                                         <div class="flex items-center justify-between text-sm font-medium text-slate-600">
-                                            <span>Progres</span>
+                                            <span>Progress</span>
                                             <span>{{ $course['progress'] }}%</span>
                                         </div>
                                         <div class="h-3 rounded-full bg-white/80 ring-1 ring-black/5">
@@ -151,7 +151,7 @@
                             </a>
                         @empty
                             <div class="rounded-[1.75rem] border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm md:col-span-2 xl:col-span-3">
-                                Belum ada mata kuliah untuk kelas Anda.
+                                No courses for your class yet.
                             </div>
                         @endforelse
                     </div>

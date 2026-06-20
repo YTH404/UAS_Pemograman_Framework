@@ -1,9 +1,9 @@
 @extends('layouts.admin')
 
-@section('title', 'Beranda Admin')
+@section('title', 'Admin Dashboard')
 
 @section('header-title')
-    <p class="text-sm font-semibold uppercase tracking-[0.22em] text-sky-700">Beranda</p>
+    <p class="text-sm font-semibold uppercase tracking-[0.22em] text-sky-700">Dashboard</p>
 @endsection
 
 @section('content')
@@ -11,8 +11,8 @@
         <article class="overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/70 lg:p-10">
             <div class="flex items-center justify-between gap-4">
                 <div>
-                    <h2 class="text-3xl font-semibold tracking-tight text-slate-950">Ringkasan Sistem</h2>
-                    <p class="mt-2 text-slate-600">Pantau metrik utama dan aktivitas sistem</p>
+                    <h2 class="text-3xl font-semibold tracking-tight text-slate-950">System Summary</h2>
+                    <p class="mt-2 text-slate-600">Monitor key metrics and system activity</p>
                 </div>
             </div>
 
@@ -30,7 +30,7 @@
 
     <div class="flex items-center gap-4">
         <div class="h-px flex-1 bg-gradient-to-r from-transparent via-slate-300 to-transparent"></div>
-        <span class="text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">Aksi Cepat</span>
+        <span class="text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">Quick Actions</span>
         <div class="h-px flex-1 bg-gradient-to-r from-transparent via-slate-300 to-transparent"></div>
     </div>
 
@@ -39,10 +39,10 @@
             <a href="{{ route('admin.teacher.index') }}" class="group relative overflow-hidden rounded-[1.75rem] border border-slate-200 bg-sky-50 p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/70">
                 <div class="absolute -right-6 -top-4 h-24 w-24 rounded-full bg-sky-200/70 opacity-60"></div>
                 <div class="relative">
-                    <h3 class="text-xl font-semibold text-slate-950">Kelola Dosen</h3>
-                    <p class="mt-2 text-sm text-slate-600">Tambah, ubah, atau hapus akun dosen</p>
+                    <h3 class="text-xl font-semibold text-slate-950">Manage Teachers</h3>
+                    <p class="mt-2 text-sm text-slate-600">Add, edit, or delete teacher accounts</p>
                     <div class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-sky-700 group-hover:gap-3 transition-all">
-                        Lihat <span>→</span>
+                        View <span>→</span>
                     </div>
                 </div>
             </a>
@@ -50,10 +50,10 @@
             <a href="{{ route('admin.class.index') }}" class="group relative overflow-hidden rounded-[1.75rem] border border-slate-200 bg-emerald-50 p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/70">
                 <div class="absolute -right-6 -top-4 h-24 w-24 rounded-full bg-emerald-200/70 opacity-60"></div>
                 <div class="relative">
-                    <h3 class="text-xl font-semibold text-slate-950">Kelola Kelas</h3>
-                    <p class="mt-2 text-sm text-slate-600">Buat, ubah, atau atur kelompok belajar</p>
+                    <h3 class="text-xl font-semibold text-slate-950">Manage Classes</h3>
+                    <p class="mt-2 text-sm text-slate-600">Create, edit, or arrange class groups</p>
                     <div class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-emerald-700 group-hover:gap-3 transition-all">
-                        Lihat <span>→</span>
+                        View <span>→</span>
                     </div>
                 </div>
             </a>
@@ -61,10 +61,10 @@
             <a href="{{ route('admin.student.index') }}" class="group relative overflow-hidden rounded-[1.75rem] border border-slate-200 bg-amber-50 p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/70">
                 <div class="absolute -right-6 -top-4 h-24 w-24 rounded-full bg-amber-200/70 opacity-60"></div>
                 <div class="relative">
-                    <h3 class="text-xl font-semibold text-slate-950">Kelola Mahasiswa</h3>
-                    <p class="mt-2 text-sm text-slate-600">Tambah, ubah, atau tinjau penempatan kelas mahasiswa</p>
+                    <h3 class="text-xl font-semibold text-slate-950">Manage Students</h3>
+                    <p class="mt-2 text-sm text-slate-600">Add, edit, or review student class placement</p>
                     <div class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-amber-700 group-hover:gap-3 transition-all">
-                        Lihat <span>→</span>
+                        View <span>→</span>
                     </div>
                 </div>
             </a>
