@@ -15,6 +15,7 @@ use App\Http\Controllers\Teacher\AssignmentGradeController as TeacherAssignmentG
 use App\Http\Controllers\Teacher\AttendanceController as TeacherAttendanceController;
 use App\Http\Controllers\Teacher\DashboardController as TeacherDashboardController;
 use App\Http\Controllers\Teacher\LearningMaterialController;
+use App\Http\Controllers\Teacher\StudentActivityReportController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -32,8 +33,9 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::middleware(['role:teacher'])->group(function () {
-        Route::get('/dashboard-teacher', [TeacherDashboardController::class, 'index'])->name('teacher.dashboard');
-        Route::get('/dashboard-teacher/course/{course}', [TeacherDashboardController::class, 'showCourse'])->name('teacher.course.show');
+    Route::get('/dashboard-teacher', [TeacherDashboardController::class, 'index'])->name('teacher.dashboard');
+    Route::get('/dashboard-teacher/course/{course}', [TeacherDashboardController::class, 'showCourse'])->name('teacher.course.show');
+    Route::get('/dashboard-teacher/course/{course}/students/report', [StudentActivityReportController::class, 'index'])->name('teacher.course.students.report');
         Route::post('/dashboard-teacher/course/{course}/attendances', [TeacherAttendanceController::class, 'store'])->name('teacher.course.attendances.store');
         Route::put('/dashboard-teacher/course/{course}/attendances/{attendance}', [TeacherAttendanceController::class, 'update'])->name('teacher.course.attendances.update');
         Route::post('/dashboard-teacher/course/{course}/assignments', [TeacherAssignmentController::class, 'store'])->name('teacher.course.assignments.store');

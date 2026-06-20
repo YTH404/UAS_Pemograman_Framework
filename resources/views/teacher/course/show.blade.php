@@ -36,14 +36,22 @@
 
             <main class="mx-auto flex w-full max-w-7xl flex-col gap-8 px-6 pb-16 pt-2 lg:px-8 lg:pb-24">
                 <section class="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/70 lg:p-10">
-                    <h1 class="text-3xl font-semibold tracking-tight text-slate-950 lg:text-4xl">{{ $courseTitle }}</h1>
-                    <nav class="mt-4 flex flex-wrap items-center gap-2 text-sm text-slate-500">
-                        <a href="{{ route('teacher.dashboard') }}" class="font-medium text-slate-700 transition hover:text-slate-950">Dashboard</a>
-                        <span>/</span>
-                        <span class="font-medium text-slate-700">My courses</span>
-                        <span>/</span>
-                        <span class="font-semibold text-sky-700">{{ $courseCode }}</span>
-                    </nav>
+                    <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+                        <div>
+                            <h1 class="text-3xl font-semibold tracking-tight text-slate-950 lg:text-4xl">{{ $courseTitle }}</h1>
+                            <nav class="mt-4 flex flex-wrap items-center gap-2 text-sm text-slate-500">
+                                <a href="{{ route('teacher.dashboard') }}" class="font-medium text-slate-700 transition hover:text-slate-950">Dashboard</a>
+                                <span>/</span>
+                                <span class="font-medium text-slate-700">My courses</span>
+                                <span>/</span>
+                                <span class="font-semibold text-sky-700">{{ $courseCode }}</span>
+                            </nav>
+                        </div>
+
+                        <a href="{{ route('teacher.course.students.report', $course->id) }}" class="inline-flex w-fit items-center rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:-translate-y-0.5 hover:bg-slate-800">
+                            Student Report
+                        </a>
+                    </div>
                 </section>
 
                 <section class="space-y-10">
