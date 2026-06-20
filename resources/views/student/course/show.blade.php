@@ -46,16 +46,20 @@
                     </nav>
                 </section>
 
-                <section class="space-y-10">
+                <section class="space-y-6">
                     @foreach ($meetings as $meeting)
-                        <article class="space-y-5">
-                            <div class="flex items-center gap-4">
-                                <div class="h-px flex-1 bg-gradient-to-r from-transparent via-slate-300 to-slate-300"></div>
-                                <h2 class="text-center text-xl font-semibold tracking-tight text-slate-950">{{ $meeting['title'] }}</h2>
-                                <div class="h-px flex-1 bg-gradient-to-l from-transparent via-slate-300 to-slate-300"></div>
+                        @php
+                            $hasMeetingContent = count($meeting['assignments']) > 0
+                                || count($meeting['attendances']) > 0
+                                || count($meeting['materials']) > 0;
+                        @endphp
+
+                        <article class="overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-sm">
+                            <div class="border-b border-slate-200 bg-slate-50/70 px-6 py-5">
+                                <h2 class="text-xl font-semibold tracking-tight text-slate-950">{{ $meeting['title'] }}</h2>
                             </div>
 
-                            <div class="grid gap-4">
+                            <div class="divide-y divide-slate-200">
                                 @foreach ($meeting['assignments'] as $assignment)
                                     @php
                                         $assignmentStatusClass = match ($assignment['status']['variant']) {
@@ -66,7 +70,7 @@
                                         };
                                     @endphp
 
-                                    <div class="rounded-[1.5rem] border border-violet-200 bg-violet-50/70 p-5 shadow-sm">
+                                    <div class="p-6">
                                         <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                                             <div>
                                                 <p class="text-xs font-semibold uppercase tracking-[0.2em] text-violet-700">Assignment · {{ $assignment['assignment_type_label'] }}</p>
@@ -82,7 +86,7 @@
                                                 @if ($assignment['files']->isNotEmpty())
                                                     <div class="mt-3 flex flex-wrap gap-2">
                                                         @foreach ($assignment['files'] as $file)
-                                                            <a href="{{ $file['url'] }}" target="_blank" class="rounded-full bg-white px-3 py-1 text-xs font-semibold text-violet-700 shadow-sm transition hover:bg-violet-100">{{ $file['name'] }}</a>
+                                                            <a href="{{ $file['url'] }}" target="_blank" class="rounded-full bg-violet-50 px-3 py-1 text-xs font-semibold text-violet-700 transition hover:bg-violet-100">{{ $file['name'] }}</a>
                                                         @endforeach
                                                     </div>
                                                 @endif
@@ -138,7 +142,7 @@
                                         };
                                     @endphp
 
-                                    <div class="rounded-[1.5rem] border border-emerald-200 bg-emerald-50/70 p-5 shadow-sm">
+                                    <div class="p-6">
                                         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                                             <div>
                                                 <p class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">Attendance</p>
@@ -188,7 +192,7 @@
                                         $doneMark = $materialCard['done_mark'];
                                     @endphp
 
-                                    <div class="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm">
+                                    <div class="p-6">
                                         <div class="space-y-4">
                                             <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                                                 <div>
@@ -225,6 +229,10 @@
                                         </div>
                                     </div>
                                 @endforeach
+
+                                @unless ($hasMeetingContent)
+                                    <div class="p-6 text-sm text-slate-500">No content has been added for this week yet.</div>
+                                @endunless
                             </div>
                         </article>
                     @endforeach

@@ -59,7 +59,7 @@
                         </a>
                     </div>
 
-                    <div class="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                    {{-- <div class="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                         <div class="rounded-3xl bg-slate-950 p-5 text-white shadow-sm ring-1 ring-white/10">
                             <p class="text-sm font-semibold uppercase tracking-[0.2em] text-sky-300">Students</p>
                             <p class="mt-4 text-4xl font-semibold">{{ $gradebook['rows']->count() }}</p>
@@ -80,7 +80,7 @@
                             <p class="mt-4 text-4xl font-semibold">{{ $gradebook['is_available'] ? 'Shown' : 'Hidden' }}</p>
                             <p class="mt-3 text-sm leading-6 text-slate-300">Teacher-only grade visibility.</p>
                         </div>
-                    </div>
+                    </div> --}}
                 </section>
 
                 @if (! $gradebook['is_configured'])
