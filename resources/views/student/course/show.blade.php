@@ -218,7 +218,7 @@
                                             </div>
 
                                             @if ($material->youtubeEmbedUrl())
-                                                <div class="aspect-video overflow-hidden rounded-2xl border border-slate-200 bg-slate-950">
+                                                <div class="aspect-video w-full max-w-2xl overflow-hidden rounded-2xl border border-slate-200 bg-slate-950">
                                                     <iframe src="{{ $material->youtubeEmbedUrl() }}" title="{{ $material->title }}" class="h-full w-full" allowfullscreen></iframe>
                                                 </div>
                                             @endif
